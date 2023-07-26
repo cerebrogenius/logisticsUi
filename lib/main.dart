@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/name/bloc/name_bloc.dart';
-import 'package:my_bloc_app/name/name_page.dart';
 import 'package:my_bloc_app/shipment/screens/main_page.dart';
 
 void main() {
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context)=>NameBloc(),
       child: ScreenUtilInit(
+        designSize:const Size(360, 592),
         builder: (context, child) {
             return MaterialApp(
           debugShowCheckedModeBanner: false,

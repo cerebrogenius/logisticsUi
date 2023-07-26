@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_bloc_app/shipment/constants.dart';
+import 'package:my_bloc_app/shipment/utilities/screen_size.dart';
 import '../data/product_data.dart';
 import '../widgets.dart';
 
@@ -8,6 +11,7 @@ class ShipmentMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: PageView(
         children: [
@@ -38,6 +42,8 @@ class ShipmentMain extends StatelessWidget {
         ),
         ],
       ),
+
+      bottomNavigationBar: buildButtomNavigationBar()
     );
   }
 
@@ -90,7 +96,9 @@ class ShipmentMain extends StatelessWidget {
                     scrollDirection: Axis.vertical,
                     itemCount: productList.length,
                     itemBuilder: ((context, index) {
-                      return detailsWidget(product: productList[index]);
+                      return detailsWidget(product: productList[index],
+                      context: context
+                      );
                     }),
                    );
   }

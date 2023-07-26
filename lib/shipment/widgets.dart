@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_bloc_app/shipment/constants.dart';
-import 'package:my_bloc_app/shipment/data/product_data.dart';
 import 'package:my_bloc_app/shipment/models/product_model.dart';
+import 'package:my_bloc_app/shipment/utilities/screen_size.dart';
 
 Widget appBarIcon({
   required IconData iconName, 
@@ -56,7 +57,7 @@ class MyAppBar extends StatelessWidget {
       )
 
     ],
-            );
+);
   }
 }
 
@@ -146,12 +147,13 @@ Widget myTextWidget({
 
 Widget detailsWidget({ 
   required Product product,
+  required BuildContext context
 }){
   return Container(
     padding: EdgeInsets.all(10.h),
     margin: EdgeInsets.symmetric(vertical: 10.h),
     height: 150.h,
-    width: 400.h,
+    width: 450.w,
     decoration: BoxDecoration(
     color: Colors.white,
       borderRadius: BorderRadius.all(Radius.circular(15.r))
@@ -162,14 +164,14 @@ Widget detailsWidget({
         Row(
           children: [
           Container(
-            height: 40.w,
-            width: 40.w,
+            height: 40.h,
+            width: 40.h,
             decoration: BoxDecoration(
-            color: product.onTheWay==true?iconColorOrange.withOpacity(0.2):iconColorGreen.withOpacity(0.2),
+            color: product.onTheWay?iconColorOrange.withOpacity(0.2):iconColorGreen.withOpacity(0.2),
             borderRadius: BorderRadius.all(Radius.circular(10.r))
             ),
-            child: Icon(product.onTheWay==true? Icons.local_shipping: Icons.maps_home_work,
-            color: product.onTheWay==true?iconColorOrange:iconColorGreen,
+            child: Icon(product.onTheWay? Icons.local_shipping: Icons.maps_home_work,
+            color: product.onTheWay?iconColorOrange:iconColorGreen,
             ),
           ),
           SizedBox(width: 10.w,),
@@ -203,8 +205,8 @@ Widget detailsWidget({
           crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(width: 45.w,),
-            trackingBar(product: product),
+            SizedBox(width: 45.h),
+            trackingBar(product: product, context: context),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -229,7 +231,10 @@ Widget detailsWidget({
   );
 }
 
-Widget trackingBar({required Product product}){
+Widget trackingBar({
+  required Product product,
+  required BuildContext context
+  }){
   return Container(
     alignment: Alignment.centerLeft,
     width: 20.w,
@@ -237,22 +242,22 @@ Widget trackingBar({required Product product}){
       
       children: [
           Padding(
-            padding: EdgeInsets.only(top:5.h),
+            padding: EdgeInsets.only(top:2.h),
             child: Icon(Icons.circle,size: 9,color:product.onTheWay? indicatorBlue:indicatorGreen,),
           ),
           Container(
           color:product.onTheWay? indicatorBlue:indicatorGreen,
-            height: 14.h,
+            height: product.onTheWay? 12.h:10.h,
             width: 2.0,
           ),
-          product.onTheWay? const Icon(Icons.circle,size: 15,color: indicatorBlue):Container(height: 15.0,width: 2.0,color:indicatorGreen ,),
+          product.onTheWay? const Icon(Icons.circle,size: 15,color: indicatorBlue):Container(height: 16.w,width: 2.0,color:indicatorGreen ,),
               Container(
             color:product.onTheWay? indicatorGrey:indicatorGreen,
-            height: product.onTheWay==true?17.h:14.h,
+            height: product.onTheWay?14.h:11.h,
             width: 2.0,
           ),
           Icon(Icons.circle,size: product.onTheWay?9:15, 
-          color:product.onTheWay==true?indicatorGrey:indicatorGreen),
+          color:product.onTheWay?indicatorGrey:indicatorGreen),
       ],
     ),
   );
@@ -272,4 +277,22 @@ Widget getLocationAndStatus({
   required String header
 }){
 return titleAndSub(title: header, subTitle: info);
+}
+
+Widget buildButtomNavigationBar(){
+  return Container(
+    decoration: BoxDecoration(
+      border: Border(bottom:BorderSide(
+        width: 5,
+        color: Colors.blue
+      ) )
+    ),
+    child: BottomNavigationBar(
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.blue,
+        items: const [
+        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.cube, size: 20,), label: ''),
+        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.locationDot), label: ''),
+      ]),
+  );
 }
