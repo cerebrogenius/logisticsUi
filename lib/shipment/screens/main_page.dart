@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../data/product_data.dart';
-import '../widgets.dart';
+import '../utilities/widgets.dart';
 
 class ShipmentMain extends StatelessWidget {
   const ShipmentMain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: PageView(
         children: [

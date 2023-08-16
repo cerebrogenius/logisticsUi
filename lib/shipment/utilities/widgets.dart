@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:my_bloc_app/shipment/constants.dart';
+import 'package:my_bloc_app/shipment/utilities/constants.dart';
 import 'package:my_bloc_app/shipment/models/product_model.dart';
 
 Widget appBarIcon({
@@ -280,7 +280,7 @@ return titleAndSub(title: header, subTitle: info);
 
 Widget buildButtomNavigationBar(){
   return Container(
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       border: Border(bottom:BorderSide(
         width: 5,
         color: Colors.blue
