@@ -18,7 +18,9 @@ class WelcomePage extends StatelessWidget {
               PageView(
                 controller: controller,
                 onPageChanged: (page) {
-                  BlocProvider.of<WelcomePageBloc>(context).add(PageChangeEvent(page: page));
+                  BlocProvider.of<WelcomePageBloc>(context).add(
+                    PageChangeEvent(page: page),
+                  );
                 },
                 children: [
                   WelcomeWidget(
@@ -34,25 +36,31 @@ class WelcomePage extends StatelessWidget {
                     buttonName: 'Next',
                     controller: controller,
                     index: 1,
-                    ),
+                  ),
                   WelcomeWidget(
                     imagePath: 'assets/images/image3.jpg',
                     message: 'Order At The Comfort Of Your Home',
                     buttonName: 'Get Started',
                     controller: controller,
                     index: 2,
-                    )
+                  )
                 ],
               ),
               Positioned(
-                bottom: 70,left: 0, right: 0,
-                child: DotsIndicator(
-                  decorator: DotsDecorator(
-                    activeSize: const Size.fromRadius(5),
-                    activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))
-                  ),
-                  dotsCount: 3, 
-                  position: BlocProvider.of<WelcomePageBloc>(context).state.page,))
+                  bottom: 70,
+                  left: 0,
+                  right: 0,
+                  child: DotsIndicator(
+                    decorator: DotsDecorator(
+                      activeSize: const Size.fromRadius(5),
+                      activeShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    dotsCount: 3,
+                    position:
+                        BlocProvider.of<WelcomePageBloc>(context).state.page,
+                  ))
             ],
           );
         },
@@ -72,12 +80,13 @@ class WelcomeWidget extends StatelessWidget {
     Key? key,
     required this.imagePath,
     required this.message,
-    required this.buttonName, required this.controller, required this.index,
+    required this.buttonName,
+    required this.controller,
+    required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-   
     return Column(
       children: [
         Container(
@@ -85,31 +94,40 @@ class WelcomeWidget extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(imagePath), fit: BoxFit.contain),
+              image: AssetImage(imagePath),
+              fit: BoxFit.contain,
+            ),
           ),
         ),
         Text(
           message,
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         TextButton(
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.blue)),
+              backgroundColor: MaterialStateProperty.all(Colors.blue),
+            ),
             onPressed: () {
-             final bloc= BlocProvider.of<WelcomePageBloc>(context).state;
-              if(bloc.page<3){
-                controller.animateToPage(
-                bloc.page++, 
-                duration: const Duration(milliseconds: 300), 
-                curve: Curves.decelerate);
-              }else{
-                Navigator.of(context).pushNamedAndRemoveUntil('MainPage',(route)=>false);
+              final bloc = BlocProvider.of<WelcomePageBloc>(context).state;
+              if (bloc.page < 3) {
+                controller.animateToPage(bloc.page++,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.decelerate);
+              } else {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  'MainPage',
+                  (route) => false,
+                );
               }
             },
             child: Text(
               buttonName,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ))
       ],
     );
