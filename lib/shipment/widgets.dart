@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_bloc_app/shipment/constants.dart';
 import 'package:my_bloc_app/shipment/models/product_model.dart';
-import 'package:my_bloc_app/shipment/utilities/screen_size.dart';
 
 Widget appBarIcon({
   required IconData iconName, 

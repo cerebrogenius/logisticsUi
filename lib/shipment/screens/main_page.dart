@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:my_bloc_app/shipment/constants.dart';
-import 'package:my_bloc_app/shipment/utilities/screen_size.dart';
 import '../data/product_data.dart';
 import '../widgets.dart';
 
