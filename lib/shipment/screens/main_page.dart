@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../data/product_data.dart';
-import '../utilities/widgets.dart';
+import '../utilities/widgets/widgets.dart';
 
 class ShipmentMain extends StatelessWidget {
   const ShipmentMain({Key? key}) : super(key: key);
@@ -9,51 +9,46 @@ class ShipmentMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 12.h,
-                    ),
-                    child: const MyAppBar(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 30.w,
-                      bottom: 5.h,
-                    ),
-                    child: const TextTitleWidget(
-                      text: 'Track Your Shipment',
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: 30.0,
-                    ),
-                    child: SearchBox(
-                      hintText: 'Track Number',
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  Flexible(
-                    child: bodyContainer(),
-                  ),
-                ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 12.h,
+                ),
+                child: const MyAppBar(),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 30.w,
+                  bottom: 5.h,
+                ),
+                child: const TextTitleWidget(
+                  text: 'Track Your Shipment',
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(
+                  left: 30.0,
+                ),
+                child: SearchBox(
+                  hintText: 'Track Number',
+                ),
+              ),
+              SizedBox(
+                height: 12.h,
+              ),
+              Flexible(
+                child: bodyContainer(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-      bottomNavigationBar: buildButtomNavigationBar(),
     );
   }
 

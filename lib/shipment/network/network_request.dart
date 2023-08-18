@@ -51,10 +51,21 @@ class HttpRequest {
     }
     return [message, detail];
   }
-  logoutUser()async{
+
+  logoutUser() async {
     await client.post(
       headers: {'Content-type': 'application/json'},
       Uri.https(baseUrl, '/users/logout'),
     );
+  }
+
+  getUserDetails() async {
+    Response response = await client.get(
+      headers: {'Content-type': 'application/json'},
+      Uri.https(baseUrl, '/users/me'),
+    );
+    print(response.body);
+    Map<String, dynamic> user = jsonDecode(response.body);
+    return user;
   }
 }
