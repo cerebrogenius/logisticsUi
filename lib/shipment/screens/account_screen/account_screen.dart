@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
+import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -24,14 +26,33 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
               Center(
-                child: TextButton(
-                  onPressed: () {
-                   var user =
-                        HttpRequest().getUserDetails();
-                    print(user.toString());
+                child: BlocBuilder<LoginCubit, LoginCubitState>(
+                  builder: (context, state) {
+                    return TextButton(
+                      onPressed: ()async {
+                        var user = context.read<LoginCubit>();
+
+                        final token =await user.getUserDetails(state.access);
+                        
+                      },
+                      child: Text('click'),
+                    );
                   },
-                  child: Text('click'),
                 ),
+              ),
+
+              BlocBuilder<LoginCubit, LoginCubitState>(
+                builder: (context, state) {
+                  return TextButton(
+                      onPressed: () async {
+                        var user = context.read<LoginCubit>();
+                        final logout = user.logOut(user.state.access);
+                        if (state.isLoggedIn == false) {
+                          Navigator.popAndPushNamed(context, 'LoginPage');
+                        }
+                      },
+                      child: Text('Logout'));
+                },
               )
             ],
           ),

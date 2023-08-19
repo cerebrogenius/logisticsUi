@@ -1,13 +1,13 @@
 class UserModel {
-  final String name;
-  final String email;
+  final String? name;
+  final String? email;
   final String? password;
   final DateTime? created_at;
   final bool? isActive;
 
   UserModel({
-    required this.name,
-    required this.email,
+    this.name,
+    this.email,
     this.isActive,
     this.password,
     this.created_at,
@@ -27,11 +27,12 @@ class UserModel {
     );
   }
 
-  UserModel getUser(Map<String, dynamic> json) {
+ static UserModel getUser(Map<String, dynamic> json) {
     return UserModel(
       name: json['name'],
       email: json['email'],
       created_at: json['created_at'],
+      isActive: json['is_active'],
     );
   }
 }

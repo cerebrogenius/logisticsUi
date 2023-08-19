@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:my_bloc_app/shipment/models/user_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
 
 // part 'login_cubit_state.dart';
@@ -50,15 +51,37 @@ class LoginCubit extends Cubit<LoginCubitState> {
       );
       if (response[0] == 'success') {
         emit(
-          state.copyWith(loginState: LoginStates.success, error: '', isLoggedIn: true),
+          state.copyWith(
+              loginState: LoginStates.success, error: '', isLoggedIn: true),
         );
+        emit(state.copyWith(access: response[1]['access_token']));
       } else {
         emit(
           state.copyWith(loginState: LoginStates.error, error: response[0]),
         );
+        return response[0];
       }
     } on Exception catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
+  }
+
+  getUserDetails(String access) async {
+    try {
+      var details = await HttpRequest().getUserDetails(access);
+      return details;
+    } catch (e) {}
+  }
+
+  logOut(String access) {
+    try {
+      String response = HttpRequest().logoutUser(access);
+      emit(state.copyWith(isLoggedIn: false));
+      return response;
+    } catch (e) {}
+  }
+
+  UserModel getUserFromNetwork(Map<String, dynamic> json) {
+    return UserModel().toUser(json);
   }
 }

@@ -52,20 +52,32 @@ class HttpRequest {
     return [message, detail];
   }
 
-  logoutUser() async {
-    await client.post(
-      headers: {'Content-type': 'application/json'},
+  logoutUser(String accesstoken) async {
+    Response response = await client.post(
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accesstoken'
+      },
       Uri.https(baseUrl, '/users/logout'),
     );
+    if (response.statusCode == 200) {
+      return 'success';
+    }
   }
 
-  getUserDetails() async {
+  getUserDetails(String accesstoken) async {
     Response response = await client.get(
-      headers: {'Content-type': 'application/json'},
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accesstoken'
+      },
       Uri.https(baseUrl, '/users/me'),
     );
-    print(response.body);
-    Map<String, dynamic> user = jsonDecode(response.body);
-    return user;
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      Map<String, dynamic> user = await jsonDecode(response.body);
+      print(user);
+      return user;
+    }
   }
 }

@@ -42,15 +42,15 @@ class MyApp extends StatelessWidget {
                 routes: {
                   'ShipmentMain': (context) => const ShipmentMain(),
                   'MainPage': (context) => SignUpPage(),
-                  'LoginPage': (context) => const LoginPage()
+                  'LoginPage': (context) => const LoginPage(),
+                  'HomeScreen':(context) => const HomeScreen(),
                 },
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
-                home: HomeScreen()
-                // WelcomePage(),
+                home: WelcomePage(),
                 ),
           );
         },

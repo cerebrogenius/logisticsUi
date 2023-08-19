@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_bloc_app/shipment/models/user_model.dart';
-import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 import 'package:my_bloc_app/shipment/screens/signUp_screen_widgets.dart';
@@ -70,18 +68,16 @@ class LoginPage extends StatelessWidget {
                     return;
                   }
                   showAlert(context: context);
-                  final login = context.read<LoginCubit>().state;
-                  await context.read<LoginCubit>().loginUser(
+                  final login = context.read<LoginCubit>();
+                  final token = await login.loginUser(
                       email: emailController.text,
                       password: passwordController.text);
+
                   emailController.clear();
                   passwordController.clear();
-                  if (login.isLoggedIn == true) {
+                  if (login.state.error == '') {
                     Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      'ShipmentMain',
-                      (route) => false,
-                    );
+                        context, 'HomeScreen', (route) => false);
                   }
                 }),
             Padding(
@@ -135,6 +131,7 @@ showAlert({required BuildContext context}) {
                     ),
                   );
                 }
+
                 return const SizedBox.shrink();
               },
             ),
