@@ -8,6 +8,7 @@ import 'package:my_bloc_app/shipment/network/network_request.dart';
 enum LoginStates { initial, loading, success, error }
 
 class LoginCubitState {
+  final Map<String,dynamic>? user;
   final String access;
   final String refresh;
   final bool isLoggedIn;
@@ -15,12 +16,14 @@ class LoginCubitState {
   final String error;
 
   LoginCubitState(
-      {this.error = '',
+      {this.user,
+      this.error = '',
       this.access = '',
       this.refresh = '',
       this.isLoggedIn = false,
       this.loginState = LoginStates.initial});
   LoginCubitState copyWith({
+    Map<String,dynamic>? user,
     String? access,
     String? refresh,
     bool? isLoggedIn,
@@ -28,11 +31,13 @@ class LoginCubitState {
     String? error,
   }) {
     return LoginCubitState(
-        error: error ?? this.error,
-        access: access ?? this.access,
-        refresh: refresh ?? this.refresh,
-        isLoggedIn: isLoggedIn ?? this.isLoggedIn,
-        loginState: loginState ?? this.loginState);
+      error: error ?? this.error,
+      access: access ?? this.access,
+      refresh: refresh ?? this.refresh,
+      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
+      loginState: loginState ?? this.loginState,
+      user: user ?? this.user,
+    );
   }
 }
 
@@ -69,6 +74,8 @@ class LoginCubit extends Cubit<LoginCubitState> {
   getUserDetails(String access) async {
     try {
       var details = await HttpRequest().getUserDetails(access);
+      
+      emit(state.copyWith(user: details));
       return details;
     } catch (e) {}
   }
@@ -81,7 +88,7 @@ class LoginCubit extends Cubit<LoginCubitState> {
     } catch (e) {}
   }
 
-  UserModel getUserFromNetwork(Map<String, dynamic> json) {
-    return UserModel().toUser(json);
+  UserModel getUserFromNetwork(Map<String, dynamic>? json) {
+    return UserModel().getUser(json!);
   }
 }

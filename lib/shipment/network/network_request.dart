@@ -61,6 +61,8 @@ class HttpRequest {
       Uri.https(baseUrl, '/users/logout'),
     );
     if (response.statusCode == 200) {
+      print(response.body);
+      print(response.statusCode);
       return 'success';
     }
   }
@@ -74,9 +76,7 @@ class HttpRequest {
       Uri.https(baseUrl, '/users/me'),
     );
     if (response.statusCode == 200) {
-      print(response.statusCode);
-      Map<String, dynamic> user = await jsonDecode(response.body);
-      print(user);
+      Map<String, dynamic> user = jsonDecode(response.body);
       return user;
     }
   }

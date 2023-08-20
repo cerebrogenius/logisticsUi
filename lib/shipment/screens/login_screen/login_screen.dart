@@ -76,8 +76,8 @@ class LoginPage extends StatelessWidget {
                   emailController.clear();
                   passwordController.clear();
                   if (login.state.error == '') {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, 'HomeScreen', (route) => false);
+                    Navigator.pushNamed(
+                        context, 'HomeScreen',);
                   }
                 }),
             Padding(

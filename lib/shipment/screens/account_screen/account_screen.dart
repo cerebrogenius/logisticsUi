@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_bloc_app/shipment/network/network_request.dart';
+import 'package:intl/intl.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
-import 'package:my_bloc_app/shipment/utilities/constants.dart';
+import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -15,49 +15,124 @@ class AccountScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Profile Details',
-                  style: TextStyle(
-                      fontSize: 25.sp,
-                      fontWeight: FontWeight.normal,
-                      color: indicatorBlue),
-                ),
-              ),
-              Center(
-                child: BlocBuilder<LoginCubit, LoginCubitState>(
-                  builder: (context, state) {
-                    return TextButton(
-                      onPressed: ()async {
-                        var user = context.read<LoginCubit>();
-
-                        final token =await user.getUserDetails(state.access);
-                        
-                      },
-                      child: Text('click'),
-                    );
-                  },
-                ),
-              ),
-
               BlocBuilder<LoginCubit, LoginCubitState>(
                 builder: (context, state) {
-                  return TextButton(
-                      onPressed: () async {
-                        var user = context.read<LoginCubit>();
-                        final logout = user.logOut(user.state.access);
-                        if (state.isLoggedIn == false) {
-                          Navigator.popAndPushNamed(context, 'LoginPage');
-                        }
-                      },
-                      child: Text('Logout'));
+                  final login =
+                      context.read<LoginCubit>().getUserFromNetwork(state.user);
+                  print(login);
+                  return Container(
+                    alignment: Alignment.topLeft,
+                    height: 130.h,
+                    width: 500.w,
+                    color: Colors.blue,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 20.w, top: 20.w),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 30.r,
+                            child: const Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20.h),
+                              child: Text(
+                                login.name ?? '',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            const Text(
+                              'created at:',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              formattedDate(login.created_at ?? DateTime.now()),
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+              BlocBuilder<LoginCubit, LoginCubitState>(
+                builder: (context, state) {
+                  final login =
+                      context.read<LoginCubit>().getUserFromNetwork(state.user);
+                  return Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(top: 4.h),
+                        margin: EdgeInsets.only(
+                          top: 3.h,
+                          left: 3.w,
+                        ),
+                        height: 40.h,
+                        width: 200.w,
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(7),
+                          ),
+                        ),
+                        child: Center(
+                          child: titleAndSub(
+                              title: 'Email : ',
+                              subTitle: login.email ?? '',
+                              color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
                 },
               )
             ],
           ),
         ),
+        floatingActionButton: BlocBuilder<LoginCubit, LoginCubitState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () async {
+                final login = context.read<LoginCubit>();
+                final message = await login.logOut(state.access);
+                if (state.isLoggedIn == false) {
+                  Navigator.pop(context);
+                }
+              },
+              child: const Icon(
+                Icons.logout,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
+}
+
+String formattedDate(DateTime date) {
+  return DateFormat.yMMMMd().format(date);
 }

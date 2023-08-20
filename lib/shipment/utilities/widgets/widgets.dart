@@ -270,11 +270,11 @@ Widget trackingBar({required Product product, required BuildContext context}) {
   );
 }
 
-Widget titleAndSub({required String title, required String subTitle}) {
+Widget titleAndSub({required String title, required String subTitle, Color? color}) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     myTextWidget(
-        text: title, color: Colors.black.withOpacity(0.3), size: 12.sp),
-    myTextWidget(text: subTitle, color: Colors.black, size: 12.sp)
+        text: title, color:color?? Colors.black.withOpacity(0.3), size: 12.sp),
+    myTextWidget(text: subTitle, color: color??Colors.black, size: 12.sp)
   ]);
 }
 
