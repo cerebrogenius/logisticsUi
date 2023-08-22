@@ -100,11 +100,5 @@ class LoginCubit extends Cubit<LoginCubitState> {
     } catch (e) {}
   }
 
-  updateLogin(bool isLoggedIn) {
-    emit(state.copyWith(isLoggedIn: isLoggedIn));
-  }
-
-  // UserModel getUserFromNetwork(Map<String, dynamic>? json) {
-  //   return UserModel().getUser(json!);
-  // }
+  
 }
