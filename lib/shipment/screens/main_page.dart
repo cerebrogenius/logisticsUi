@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../data/product_data.dart';
 import '../utilities/widgets/widgets.dart';
+import 'login_screen/cubit/login_cubit.dart';
 
-class ShipmentMain extends StatelessWidget {
+class ShipmentMain extends StatefulWidget {
   const ShipmentMain({Key? key}) : super(key: key);
 
+  @override
+  State<ShipmentMain> createState() => _ShipmentMainState();
+
+}
+
+class _ShipmentMainState extends State<ShipmentMain> {
+  @override
+  void initState() {
+     final login = context.read<LoginCubit>();
+    login.getUserDetails(login.state.access);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

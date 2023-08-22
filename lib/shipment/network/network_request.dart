@@ -62,12 +62,12 @@ class HttpRequest {
     );
     if (response.statusCode == 200) {
       print(response.body);
-      print(response.statusCode);
       return 'success';
     }
   }
 
-  getUserDetails(String accesstoken) async {
+  Future<UserModel> getUserDetailsFromNetwork(String accesstoken) async {
+    UserModel userDetail = UserModel();
     Response response = await client.get(
       headers: {
         'Content-type': 'application/json',
@@ -76,8 +76,11 @@ class HttpRequest {
       Uri.https(baseUrl, '/users/me'),
     );
     if (response.statusCode == 200) {
-      Map<String, dynamic> user = jsonDecode(response.body);
-      return user;
+      UserModel user = UserModel();
+      userDetail = user.getUser(
+        jsonDecode(response.body),
+      );
     }
+    return userDetail;
   }
 }

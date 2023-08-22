@@ -17,9 +17,6 @@ class AccountScreen extends StatelessWidget {
             children: [
               BlocBuilder<LoginCubit, LoginCubitState>(
                 builder: (context, state) {
-                  final login =
-                      context.read<LoginCubit>().getUserFromNetwork(state.user);
-                  print(login);
                   return Container(
                     alignment: Alignment.topLeft,
                     height: 130.h,
@@ -49,7 +46,7 @@ class AccountScreen extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 20.h),
                               child: Text(
-                                login.name ?? '',
+                                state.user?.name ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.sp,
@@ -68,7 +65,9 @@ class AccountScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              formattedDate(login.created_at ?? DateTime.now()),
+                              formattedDate(
+                                state.user?.created_at ?? DateTime.now(),
+                              ),
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -80,8 +79,6 @@ class AccountScreen extends StatelessWidget {
               ),
               BlocBuilder<LoginCubit, LoginCubitState>(
                 builder: (context, state) {
-                  final login =
-                      context.read<LoginCubit>().getUserFromNetwork(state.user);
                   return Row(
                     children: [
                       Container(
@@ -101,7 +98,7 @@ class AccountScreen extends StatelessWidget {
                         child: Center(
                           child: titleAndSub(
                               title: 'Email : ',
-                              subTitle: login.email ?? '',
+                              subTitle: state.user?.email ?? '',
                               color: Colors.white),
                         ),
                       ),
@@ -118,8 +115,9 @@ class AccountScreen extends StatelessWidget {
               onPressed: () async {
                 final login = context.read<LoginCubit>();
                 final message = await login.logOut(state.access);
+                login.updateLogin(state.isLoggedIn);
                 if (state.isLoggedIn == false) {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                 }
               },
               child: const Icon(

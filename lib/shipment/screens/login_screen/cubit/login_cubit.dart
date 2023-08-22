@@ -7,15 +7,15 @@ import 'package:my_bloc_app/shipment/network/network_request.dart';
 
 enum LoginStates { initial, loading, success, error }
 
-class LoginCubitState {
-  final Map<String,dynamic>? user;
+class LoginCubitState extends Equatable {
+  final UserModel? user;
   final String access;
   final String refresh;
   final bool isLoggedIn;
   final LoginStates loginState;
   final String error;
 
-  LoginCubitState(
+  const LoginCubitState(
       {this.user,
       this.error = '',
       this.access = '',
@@ -23,7 +23,7 @@ class LoginCubitState {
       this.isLoggedIn = false,
       this.loginState = LoginStates.initial});
   LoginCubitState copyWith({
-    Map<String,dynamic>? user,
+    UserModel? user,
     String? access,
     String? refresh,
     bool? isLoggedIn,
@@ -39,10 +39,19 @@ class LoginCubitState {
       user: user ?? this.user,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        isLoggedIn,
+        error,
+        access,
+        refresh,
+        user,
+      ];
 }
 
 class LoginCubit extends Cubit<LoginCubitState> {
-  LoginCubit() : super(LoginCubitState(loginState: LoginStates.initial));
+  LoginCubit() : super(const LoginCubitState(loginState: LoginStates.initial));
 
   loginUser({
     required String email,
@@ -71,24 +80,31 @@ class LoginCubit extends Cubit<LoginCubitState> {
     }
   }
 
-  getUserDetails(String access) async {
+  Future<UserModel> getUserDetails(String access) async {
+    UserModel user = UserModel();
     try {
-      var details = await HttpRequest().getUserDetails(access);
-      
-      emit(state.copyWith(user: details));
-      return details;
+      user = await HttpRequest().getUserDetailsFromNetwork(access);
+
+      emit(state.copyWith(user: user));
     } catch (e) {}
+    return user;
   }
 
   logOut(String access) {
     try {
       String response = HttpRequest().logoutUser(access);
-      emit(state.copyWith(isLoggedIn: false));
+      if (response=='success') {
+  emit(state.copyWith(isLoggedIn: false));
+}
       return response;
     } catch (e) {}
   }
 
-  UserModel getUserFromNetwork(Map<String, dynamic>? json) {
-    return UserModel().getUser(json!);
+  updateLogin(bool isLoggedIn) {
+    emit(state.copyWith(isLoggedIn: isLoggedIn));
   }
+
+  // UserModel getUserFromNetwork(Map<String, dynamic>? json) {
+  //   return UserModel().getUser(json!);
+  // }
 }

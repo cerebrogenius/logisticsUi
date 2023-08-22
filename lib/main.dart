@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_bloc_app/shipment/screens/account_screen/account_screen.dart';
 import 'package:my_bloc_app/shipment/screens/home_screen/home_screen.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
@@ -14,7 +13,9 @@ import 'package:my_bloc_app/shipment/screens/welcome_page/welcome_page.dart';
 import 'shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -34,24 +35,24 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: ((context) => LoginCubit()),
               ),
-               BlocProvider(
+              BlocProvider(
                 create: ((context) => HomeScreenCubit()),
               ),
             ],
             child: MaterialApp(
-                routes: {
-                  'ShipmentMain': (context) => const ShipmentMain(),
-                  'MainPage': (context) => SignUpPage(),
-                  'LoginPage': (context) => const LoginPage(),
-                  'HomeScreen':(context) => const HomeScreen(),
-                },
-                debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                home: WelcomePage(),
-                ),
+              routes: {
+                'ShipmentMain': (context) => const ShipmentMain(),
+                'MainPage': (context) => SignUpPage(),
+                'LoginPage': (context) => const LoginPage(),
+                'HomeScreen': (context) => const HomeScreen(),
+              },
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: WelcomePage(),
+            ),
           );
         },
       ),

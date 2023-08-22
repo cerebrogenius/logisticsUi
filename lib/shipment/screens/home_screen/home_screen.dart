@@ -28,15 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child: PageView(
-            onPageChanged: (value) {
-              context.read<HomeScreenCubit>().pageChange(index: value);
-            },
-            controller: pageController,
-            children: const [
-              ShipmentMain(),
-              AccountScreen(),
-            ],
+          child: Navigator(
+            onGenerateRoute:((settings) {
+              return MaterialPageRoute(builder: (context){
+              return  PageViewContent(pageController: pageController);
+            }) ;
+
+              })
           ),
         ),
         bottomNavigationBar: BlocBuilder<HomeScreenCubit, HomeScreenCubitState>(
@@ -60,6 +58,29 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+    );
+  }
+}
+
+class PageViewContent extends StatelessWidget {
+  const PageViewContent({
+    Key? key,
+    required this.pageController,
+  }) : super(key: key);
+
+  final PageController pageController;
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      onPageChanged: (value) {
+        context.read<HomeScreenCubit>().pageChange(index: value);
+      },
+      controller: pageController,
+      children: const [
+        ShipmentMain(),
+        AccountScreen(),
+      ],
     );
   }
 }

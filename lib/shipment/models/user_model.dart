@@ -13,8 +13,6 @@ class UserModel {
     this.created_at,
   });
 
-
-
   Map<String, dynamic> toMap(UserModel user) {
     return {"name": user.name, "email": user.email, "password": user.password};
   }
