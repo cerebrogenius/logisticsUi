@@ -41,12 +41,12 @@ class MyApp extends StatelessWidget {
                 create: ((context) => HomeScreenCubit()),
               ),
               BlocProvider(
-                create: (((context) =>
-                    AuthStateCubit(authStatus: AuthStatus.unauthenticated))),
+                create: (context) => AuthStateCubit(
+                  authStatus: AuthStatus.unauthenticated,
+                ),
               ),
             ],
             child: MaterialApp(
-
               routes: {
                 'ShipmentMain': (context) => const ShipmentMain(),
                 'MainPage': (context) => SignUpPage(),

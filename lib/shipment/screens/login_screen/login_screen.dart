@@ -10,49 +10,61 @@ import '../signUp_screen_widgets.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
+  static TextEditingController emailController =
+      TextEditingController(text: 'cerebro@gmail.com');
+  static TextEditingController passwordController =
+      TextEditingController(text: 'cerebro');
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    return SafeArea(
-        child: Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.login,
-                size: 40,
-                color: indicatorBlue,
+    return BlocListener<LoginCubit, LoginCubitState>(
+      listener: (_, state) {
+        if (state.loginState == LoginStates.success && state.error == '') {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            'HomeScreen',
+            ModalRoute.withName('/'),
+          ); 
+        }
+      },
+      child: SafeArea(
+          child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.login,
+                  size: 40,
+                  color: indicatorBlue,
+                ),
               ),
-            ),
-            Text(
-              'Welcome!',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.sp,
+              Text(
+                'Welcome!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.sp,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 35.h,
-            ),
-            DetailsForm(
-                controller: emailController,
-                title: 'Email',
-                icon: Icons.email_rounded),
-            SizedBox(
-              height: 10.h,
-            ),
-            DetailsForm(
-                controller: passwordController,
-                title: 'PassWord',
-                icon: Icons.lock_rounded),
-            SizedBox(
-              height: 10.h,
-            ),
-            CustomButton(
+              SizedBox(
+                height: 35.h,
+              ),
+              DetailsForm(
+                  controller: emailController,
+                  title: 'Email',
+                  icon: Icons.email_rounded),
+              SizedBox(
+                height: 10.h,
+              ),
+              DetailsForm(
+                  controller: passwordController,
+                  title: 'PassWord',
+                  icon: Icons.lock_rounded),
+              SizedBox(
+                height: 10.h,
+              ),
+              CustomButton(
                 buttonName: 'Login',
                 icon: Icons.login,
                 function: () async {
@@ -68,32 +80,28 @@ class LoginPage extends StatelessWidget {
                     return;
                   }
                   showAlert(context: context);
-                  final login = context.read<LoginCubit>();
-                  final token = await login.loginUser(
-                      email: emailController.text,
-                      password: passwordController.text);
 
-                  emailController.clear();
-                  passwordController.clear();
-                  if (login.state.error == '') {
-                    Navigator.pushNamed(
-                        context, 'HomeScreen',);
-                  }
-                }),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: HaveAccount(
-                message: 'Don\'t have an account?',
-                prompt: ' Create',
-                function: () {
-                  Navigator.of(context).pop();
+                  context.read<LoginCubit>().loginUser(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
                 },
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: HaveAccount(
+                  message: 'Don\'t have an account?',
+                  prompt: ' Create',
+                  function: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }
 

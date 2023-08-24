@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
+import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -14,11 +15,10 @@ class AccountScreen extends StatelessWidget {
     return SafeArea(
       child: BlocListener<LoginCubit, LoginCubitState>(
         listener: (context, state) {
-          print('start1');
           if (state.isLoggedIn == false) {
-            print('start2');
-            Navigator.popAndPushNamed(context, 'LoginPage');
-            print('start3');
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+              return const LoginPage();
+            }), (route) => false);
           }
         },
         child: Scaffold(
@@ -119,17 +119,11 @@ class AccountScreen extends StatelessWidget {
               ],
             ),
           ),
-          floatingActionButton: BlocBuilder<LoginCubit, LoginCubitState>(
-            builder: (context, state) {
-              return FloatingActionButton(
-                onPressed: () async {
-                  await context.read<LoginCubit>().logOut(state.access);
-                },
-                child: const Icon(
-                  Icons.logout,
-                ),
-              );
-            },
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => user.logOut(user.state.access),
+            child: const Icon(
+              Icons.logout,
+            ),
           ),
         ),
       ),

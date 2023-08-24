@@ -26,8 +26,8 @@ class HttpRequest {
         Map<String, dynamic> msg = details;
         status = msg['detail'];
       }
-    } catch (e, s) {
-      print(e.toString());
+    } catch (e) {
+      return e.toString();
     }
     return status;
   }
@@ -52,7 +52,7 @@ class HttpRequest {
     return [message, detail];
   }
 
-  logoutUser(String accesstoken) async {
+  Future<String> logoutUser(String accesstoken) async {
     Response response = await client.post(
       headers: {
         'Content-type': 'application/json',
@@ -61,9 +61,10 @@ class HttpRequest {
       Uri.https(baseUrl, '/users/logout'),
     );
     if (response.statusCode == 200) {
-      print(response.body);
       return 'success';
     }
+
+    return 'error';
   }
 
   Future<UserModel> getUserDetailsFromNetwork(String accesstoken) async {

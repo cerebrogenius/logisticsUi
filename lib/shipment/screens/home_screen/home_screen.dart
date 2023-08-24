@@ -28,14 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child: Navigator(
-            onGenerateRoute:((settings) {
-              return MaterialPageRoute(builder: (context){
-              return  PageViewContent(pageController: pageController);
-            }) ;
-
-              })
-          ),
+          child:  PageViewContent(pageController: pageController),
         ),
         bottomNavigationBar: BlocBuilder<HomeScreenCubit, HomeScreenCubitState>(
           builder: (context, state) {

@@ -59,6 +59,7 @@ class LoginCubit extends Cubit<LoginCubitState> {
   }) async {
     try {
       emit(state.copyWith(loginState: LoginStates.loading, error: ''));
+      await Future.delayed(Duration(seconds: 2));
       List response = await HttpRequest().loginUser(
         email: email,
         password: password,
@@ -90,15 +91,16 @@ class LoginCubit extends Cubit<LoginCubitState> {
     return user;
   }
 
-  logOut(String access) {
+  Future<String> logOut(String access) async {
     try {
-      String response = HttpRequest().logoutUser(access);
-      if (response=='success') {
-  emit(state.copyWith(isLoggedIn: false));
-}
+      String response = await HttpRequest().logoutUser(access);
+      if (response == 'success') {
+        emit(state.copyWith(isLoggedIn: false));
+      }
       return response;
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+      return 'error';
+    }
   }
-
-  
 }
