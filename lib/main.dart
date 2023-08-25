@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_bloc_app/shipment/screens/auth/auth_screen.dart';
-import 'package:my_bloc_app/shipment/screens/auth/cubit/auth_state_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/home_screen/home_screen.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
@@ -39,11 +37,6 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: ((context) => HomeScreenCubit()),
-              ),
-              BlocProvider(
-                create: (context) => AuthStateCubit(
-                  authStatus: AuthStatus.unauthenticated,
-                ),
               ),
             ],
             child: MaterialApp(

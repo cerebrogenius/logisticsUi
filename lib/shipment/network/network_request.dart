@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/models/user_model.dart';
 import '../utilities/constants.dart';
 
@@ -83,5 +84,28 @@ class HttpRequest {
       );
     }
     return userDetail;
+  }
+
+  Future<String> postItem(
+      {required Items item, required String accesstoken}) async {
+    try {
+      Response response = await client.post(
+        Uri.https(baseUrl, '/items'),
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': 'Bearer $accesstoken'
+        },
+        body: jsonEncode(
+          item.itemToMap(item: item),
+        ),
+      );
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        print(response.body);
+      }
+      return 'success';
+    } catch (e) {}
+    return 'error';
   }
 }

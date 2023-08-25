@@ -4,6 +4,7 @@ import 'package:my_bloc_app/shipment/screens/account_screen/account_screen.dart'
 import 'package:my_bloc_app/shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/main_page.dart';
+import 'package:my_bloc_app/shipment/screens/post_item/post_screen.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState()  {
+  void initState() {
     final login = context.read<LoginCubit>();
     login.getUserDetails(login.state.access);
     super.initState();
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child:  PageViewContent(pageController: pageController),
+          child: PageViewContent(pageController: pageController),
         ),
         bottomNavigationBar: BlocBuilder<HomeScreenCubit, HomeScreenCubitState>(
           builder: (context, state) {
@@ -45,7 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(Icons.home),
                   label: '',
                 ),
-                BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.post_add),
+                  label: '',
+                )
               ],
             );
           },
@@ -72,6 +80,7 @@ class PageViewContent extends StatelessWidget {
       controller: pageController,
       children: const [
         ShipmentMain(),
+        PostItemScreen(),
         AccountScreen(),
       ],
     );
