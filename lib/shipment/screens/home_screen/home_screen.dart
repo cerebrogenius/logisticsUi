@@ -47,13 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: '',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
+                  icon: Icon(Icons.post_add),
                   label: '',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.post_add),
+                  icon: Icon(Icons.person),
                   label: '',
-                )
+                ),
               ],
             );
           },

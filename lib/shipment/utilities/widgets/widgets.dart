@@ -302,4 +302,52 @@ Widget buildButtomNavigationBar() {
   );
 }
 
+class DetailsForm extends StatelessWidget {
+  final String title;
+  final IconData? icon;
+  final TextEditingController controller;
+  const DetailsForm(
+      {Key? key,
+      required this.title,
+      this.icon,
+      required this.controller})
+      : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                fontSize: 16.sp, color: Colors.black.withOpacity(0.4)),
+          ),
+          Row(
+            children: [
+              Container(
+                height: 40.h,
+                width: 300.w,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 4, color: Colors.transparent),
+                    color: Colors.transparent),
+                child: TextField(
+                  controller: controller,
+                ),
+              ),
+              SizedBox(
+                width: 5.w,
+              ),
+              Icon(
+                icon,
+                color: Colors.black.withOpacity(0.4),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

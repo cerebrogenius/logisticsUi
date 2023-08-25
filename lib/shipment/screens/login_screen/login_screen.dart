@@ -6,6 +6,7 @@ import 'package:my_bloc_app/shipment/utilities/constants.dart';
 import 'package:my_bloc_app/shipment/screens/signUp_screen_widgets.dart';
 import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
 
+import '../../utilities/widgets/widgets.dart';
 import '../signUp_screen_widgets.dart';
 
 class LoginPage extends StatelessWidget {
