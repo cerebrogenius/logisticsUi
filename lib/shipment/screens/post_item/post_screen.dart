@@ -1,33 +1,46 @@
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
+import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
+import 'package:my_bloc_app/shipment/utilities/constants.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 class PostItemScreen extends StatelessWidget {
   const PostItemScreen({Key? key}) : super(key: key);
-  static TextEditingController nameController = TextEditingController();
-  static TextEditingController ownerController = TextEditingController();
-  static TextEditingController emailController = TextEditingController();
-  static TextEditingController phoneController = TextEditingController();
-  static TextEditingController noteController = TextEditingController();
+  static TextEditingController nameController =
+      TextEditingController(text: 'system');
+  static TextEditingController ownerController =
+      TextEditingController(text: 'Shola');
+  static TextEditingController emailController =
+      TextEditingController(text: 'shola@gmail.com');
+  static TextEditingController phoneController =
+      TextEditingController(text: '08050664367');
+  static TextEditingController noteController =
+      TextEditingController(text: 'order created');
+  static TextEditingController locationController =
+      TextEditingController(text: 'unilorin');
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Text(
-            'Add Item',
-            style: TextStyle(
-              fontSize: 25.sp,
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Add Item',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 25.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           DetailsForm(
-            title: 'Name',
-            controller: emailController,
+            title: 'Product Name',
+            controller: nameController,
+            titleColor: Colors.blue,
           ),
           const SizedBox(
             height: 10,
@@ -35,13 +48,15 @@ class PostItemScreen extends StatelessWidget {
           DetailsForm(
             title: 'Owner Name',
             controller: ownerController,
+            titleColor: Colors.blue,
           ),
           const SizedBox(
             height: 10,
           ),
           DetailsForm(
             title: 'Email',
-            controller: ownerController,
+            controller: emailController,
+            titleColor: Colors.blue,
           ),
           const SizedBox(
             height: 10,
@@ -49,6 +64,7 @@ class PostItemScreen extends StatelessWidget {
           DetailsForm(
             title: 'Phone Number',
             controller: phoneController,
+            titleColor: Colors.blue,
           ),
           const SizedBox(
             height: 10,
@@ -56,70 +72,114 @@ class PostItemScreen extends StatelessWidget {
           DetailsForm(
             title: 'Note',
             controller: noteController,
+            titleColor: Colors.blue,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          DetailsForm(
+            title: 'Location',
+            controller: locationController,
+            titleColor: Colors.blue,
           ),
           const SizedBox(
             height: 10,
           ),
           Stack(
             children: [
-              DetailsForm(
-                title: 'Date',
-                controller: phoneController,
+              BlocBuilder<PostItemCubit, PostItemCubitState>(
+                builder: (context, state) {
+                  return DetailsForm(
+                    title: 'Date',
+                    hintText: formattedDate(
+                      state.date ?? DateTime.now(),
+                    ),
+                    titleColor: Colors.blue,
+                    isClickAble: false,
+                  );
+                },
               ),
               Positioned(
                 right: 32.w,
-                bottom: -5,
+                bottom: 0.h,
                 child: IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: BasicDateTimeField(),
-                          );
-                        });
+                  onPressed: () async {
+                    context.read<PostItemCubit>().updateDate(
+                          newDate: await _showDate(context),
+                        );
                   },
                   icon: const Icon(
                     Icons.calendar_month,
+                    color: Colors.blue,
                   ),
                 ),
               )
             ],
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          Stack(
+            children: [
+              const DetailsForm(
+                title: 'Status',
+                titleColor: Colors.blue,
+                isClickAble: false,
+              ),
+              Positioned(
+                right: 32.w,
+                bottom: 0.h,
+                child: const DropDownStatus(),
+              )
+            ],
+          )
         ],
       ),
     );
   }
 }
 
-class BasicDateTimeField extends StatelessWidget {
-  final format = DateFormat("yyyy-MM-dd HH:mm");
+class DropDownStatus extends StatelessWidget {
+  const DropDownStatus({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      DateTimeField(
-        format: format,
-        onShowPicker: (context, currentValue) async {
-          return await showDatePicker(
-            context: context,
-            firstDate: DateTime(1900),
-            initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(2100),
-          )
-          .then((DateTime? date) async {
-            if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime:
-                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
-            }
-          });
-        },
-      ),
-    ]);
+    return BlocBuilder<PostItemCubit, PostItemCubitState>(
+      builder: (context, state) {
+        return DropdownButton<String>(
+          elevation: 10,
+          value: state.currentStatus,
+          onChanged: (value) {
+            context.read<PostItemCubit>().changeStatus(currentStatus: value);
+          },
+          items: statusList.map((
+            String e,
+          ) {
+            return DropdownMenuItem<String>(
+              value: e,
+              child: Text(
+                e,
+                style: const TextStyle(color: Colors.blue),
+              ),
+            );
+          }).toList(),
+        );
+      },
+    );
   }
+}
+
+Future<DateTime?> _showDate(BuildContext context) {
+  return showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(3000),
+  );
+}
+
+String formattedDate(DateTime date) {
+  return DateFormat.yMMMMd().format(date);
 }

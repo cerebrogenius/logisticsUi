@@ -11,6 +11,7 @@ import 'package:my_bloc_app/shipment/screens/welcome_page/bloc/welcome_page_bloc
 import 'package:my_bloc_app/shipment/screens/welcome_page/welcome_page.dart';
 
 import 'shipment/screens/home_screen/cubit/home_screen_cubit.dart';
+import 'shipment/screens/post_item/cubit/post_item_cubit.dart';
 
 void main() {
   runApp(
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: ((context) => HomeScreenCubit()),
+              ),
+               BlocProvider(
+                create: ((context) => PostItemCubit()),
               ),
             ],
             child: MaterialApp(

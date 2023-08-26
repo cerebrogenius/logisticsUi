@@ -270,11 +270,14 @@ Widget trackingBar({required Product product, required BuildContext context}) {
   );
 }
 
-Widget titleAndSub({required String title, required String subTitle, Color? color}) {
+Widget titleAndSub(
+    {required String title, required String subTitle, Color? color}) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     myTextWidget(
-        text: title, color:color?? Colors.black.withOpacity(0.3), size: 12.sp),
-    myTextWidget(text: subTitle, color: color??Colors.black, size: 12.sp)
+        text: title,
+        color: color ?? Colors.black.withOpacity(0.3),
+        size: 12.sp),
+    myTextWidget(text: subTitle, color: color ?? Colors.black, size: 12.sp)
   ]);
 }
 
@@ -303,15 +306,21 @@ Widget buildButtomNavigationBar() {
 }
 
 class DetailsForm extends StatelessWidget {
+  final Color? titleColor;
+  final bool? isClickAble;
+  final String? hintText;
   final String title;
   final IconData? icon;
-  final TextEditingController controller;
-  const DetailsForm(
-      {Key? key,
-      required this.title,
-      this.icon,
-      required this.controller})
-      : super(key: key);
+  final TextEditingController? controller;
+  const DetailsForm({
+    Key? key,
+    required this.title,
+    this.titleColor,
+    this.controller,
+    this.isClickAble,
+    this.icon,
+    this.hintText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +332,7 @@ class DetailsForm extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontSize: 16.sp, color: Colors.black.withOpacity(0.4)),
+                fontSize: 16.sp, color:titleColor?? Colors.black.withOpacity(0.4)),
           ),
           Row(
             children: [
@@ -334,6 +343,8 @@ class DetailsForm extends StatelessWidget {
                     border: Border.all(width: 4, color: Colors.transparent),
                     color: Colors.transparent),
                 child: TextField(
+                  decoration: InputDecoration(
+                      enabled: isClickAble ?? true, hintText: hintText ?? ''),
                   controller: controller,
                 ),
               ),
