@@ -58,8 +58,7 @@ class LoginCubit extends Cubit<LoginCubitState> {
     required String password,
   }) async {
     try {
-      emit(state.copyWith(loginState: LoginStates.loading, error: ''));
-      await Future.delayed(Duration(seconds: 2));
+      emit(state.copyWith(loginState: LoginStates.loading, error: ''),);
       List response = await HttpRequest().loginUser(
         email: email,
         password: password,

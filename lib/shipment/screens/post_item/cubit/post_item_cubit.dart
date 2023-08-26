@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:my_bloc_app/shipment/models/item_model.dart';
+import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 
 // part 'post_item_state.dart';
@@ -10,7 +12,7 @@ class PostItemCubitState extends Equatable {
   final DateTime? date;
 
   const PostItemCubitState({
-    this.currentStatus= 'Processing',
+    this.currentStatus = 'Processing',
     this.date,
   });
   PostItemCubitState copyWith({DateTime? date, String? status}) {
@@ -33,29 +35,19 @@ class PostItemCubit extends Cubit<PostItemCubitState> {
     );
   }
 
-  updateStatus({required ItemStatus status}) {
-    if (status == ItemStatus.created) {
-      emit(
-        state.copyWith(status: statusList[0]),
-      );
-    } else if (status == ItemStatus.created) {
-      emit(
-        state.copyWith(status: statusList[1]),
-      );
-    } else if (status == ItemStatus.delivered) {
-      emit(
-        state.copyWith(status: statusList[2]),
-      );
-    } else if (status == ItemStatus.inTransit) {
-      emit(
-        state.copyWith(status: statusList[3]),
-      );
-    }
-  }
-
   changeStatus({required currentStatus}) {
     emit(
       state.copyWith(status: currentStatus),
     );
+  }
+
+  Future<String> postItem(
+      {required Items item, required String accesstoken}) async {
+    try {
+      final reply =
+          await HttpRequest().postItem(item: item, accesstoken: accesstoken);
+      print(reply);
+    } on Exception catch (e) {}
+    return 'failure';
   }
 }

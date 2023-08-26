@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
+
+import '../../models/item_model.dart';
 
 class PostItemScreen extends StatelessWidget {
   const PostItemScreen({Key? key}) : super(key: key);
@@ -132,7 +135,25 @@ class PostItemScreen extends StatelessWidget {
                 child: const DropDownStatus(),
               )
             ],
-          )
+          ),
+          TextButton(
+              onPressed: () {
+                final detail = context.read<PostItemCubit>().state;
+                final access = context.read<LoginCubit>().state;
+                final Items item = Items(
+                    name: nameController.text,
+                    note: noteController.text,
+                    phoneNumber: phoneController.text,
+                    date: detail.date??DateTime.now(),
+                    location: locationController.text,
+                    owner: ownerController.text,
+                    status: detail.currentStatus!,
+                    email: emailController.text);
+                context
+                    .read<PostItemCubit>()
+                    .postItem(item: item, accesstoken: access.access);
+              },
+              child: const Text('Submit'))
         ],
       ),
     );
