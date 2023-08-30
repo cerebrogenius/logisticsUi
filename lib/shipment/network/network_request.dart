@@ -135,7 +135,28 @@ class HttpRequest {
         return ['error'];
       }
     } on Exception catch (e) {
-      return[e.toString()];
+      return [e.toString()];
     }
+  }
+
+  Stream<List<Items>> getItemStream({required String accessToken}) async* {
+    try {
+      Response response =
+          await client.get(Uri.https(baseUrl, '/items/'), headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      });
+      if (response.statusCode == 200) {
+        List itemList = jsonDecode(response.body);
+        List<Items> processed = [];
+        for (Map<String, dynamic> item in itemList) {
+          final Items response = Items().itemFromNetwork(item);
+          processed.add(response);
+          yield processed;
+        }
+      } else {
+        throw Exception('failed');
+      }
+    } on Exception catch (e) {}
   }
 }

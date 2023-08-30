@@ -54,14 +54,18 @@ class PostItemCubit extends Cubit<PostItemCubitState> {
     return 'failure';
   }
 
- Future<Items> getItems({required String accessToken}) async {
+  Future<Items> getItems({required String accessToken}) async {
     Items items = Items();
     List<Items> finalList = [];
     List rawItems = await HttpRequest().getItems(accessToken: accessToken);
     for (Map<String, dynamic> item in rawItems) {
       finalList.add(items.itemFromNetwork(item));
     }
-    emit(state.copyWith(itemList: finalList),);
-  return items;
+    emit(
+      state.copyWith(itemList: finalList),
+    );
+    return items;
   }
+
+ 
 }

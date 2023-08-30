@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
+import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import '../data/product_data.dart';
 import '../utilities/widgets/widgets.dart';
@@ -141,18 +142,50 @@ class _ShipmentMainState extends State<ShipmentMain> {
     );
   }
 
-  ListView ordersList() {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: context.read<PostItemCubit>().state.itemList!.length,
-      itemBuilder: ((context, index) {
-        final post = context.read<PostItemCubit>();
-        final login = context.read<LoginCubit>();
-        return detailsWidget(
-            item: post.state.itemList![index], context: context);
-      }),
-    );
+  ordersList() {
+    return StreamBuilder<List<Items>>(
+        stream: HttpRequest().getItemStream(
+            accessToken: context.read<LoginCubit>().state.access),
+        builder: (BuildContext context, items) {
+          if (items.connectionState == ConnectionState.waiting) {
+            return Container(
+              color: Colors.blue,
+              height: 150.h,
+              width: 450.w,
+              child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(child: const CircularProgressIndicator(color: Colors.white
+                  
+                  ,))),
+            );
+          } else if (items.connectionState == ConnectionState.done) {
+            if (items.hasError) {
+              return Text(items.error.toString());
+            } else if (items.hasData) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: items.data!.length,
+                  itemBuilder: (context, index) {
+                    return detailsWidget(
+                        item: items.data![index], context: context);
+                  });
+            }
+          }
+          return Text('error');
+        });
+    // return ListView.builder(
+    //   physics: const NeverScrollableScrollPhysics(),
+    //   shrinkWrap: true,
+    //   scrollDirection: Axis.vertical,
+    //   itemCount: context.read<PostItemCubit>().state.itemList!.length,
+    //   itemBuilder: ((context, index) {
+    //     final post = context.read<PostItemCubit>();
+    //     final login = context.read<LoginCubit>();
+    //     return detailsWidget(
+    //         item: post.state.itemList![index], context: context);
+    //   }),
+    // );
   }
 }
