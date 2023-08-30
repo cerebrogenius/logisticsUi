@@ -150,13 +150,11 @@ class _ShipmentMainState extends State<ShipmentMain> {
           if (items.connectionState == ConnectionState.waiting) {
             return Container(
               color: Colors.blue,
-              height: 150.h,
-              width: 450.w,
-              child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: SizedBox(child: const CircularProgressIndicator(color: Colors.white
-                  
-                  ,))),
+              height: 50.h,
+              width: 50.w,
+              child: const CircularProgressIndicator(
+                color: Colors.white,
+              ),
             );
           } else if (items.connectionState == ConnectionState.done) {
             if (items.hasError) {
@@ -173,7 +171,7 @@ class _ShipmentMainState extends State<ShipmentMain> {
                   });
             }
           }
-          return Text('error');
+          return const Text('You Have No Posts Yet');
         });
     // return ListView.builder(
     //   physics: const NeverScrollableScrollPhysics(),
