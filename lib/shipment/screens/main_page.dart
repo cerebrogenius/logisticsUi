@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_bloc_app/shipment/models/item_model.dart';
+import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import '../data/product_data.dart';
 import '../utilities/widgets/widgets.dart';
 import 'login_screen/cubit/login_cubit.dart';
@@ -10,16 +12,16 @@ class ShipmentMain extends StatefulWidget {
 
   @override
   State<ShipmentMain> createState() => _ShipmentMainState();
-
 }
 
 class _ShipmentMainState extends State<ShipmentMain> {
   @override
   void initState() {
-     final login = context.read<LoginCubit>();
+    final login = context.read<LoginCubit>();
     login.getUserDetails(login.state.access);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +43,14 @@ class _ShipmentMainState extends State<ShipmentMain> {
                   left: 30.w,
                   bottom: 5.h,
                 ),
-                child: const TextTitleWidget(
-                  text: 'Track Your Shipment',
+                child: InkWell(
+                  onTap: () {
+                    final access = context.read<LoginCubit>().state.access;
+                    context.read<PostItemCubit>().getItems(accessToken: access);
+                  },
+                  child: const TextTitleWidget(
+                    text: 'Track Your Shipment',
+                  ),
                 ),
               ),
               const Padding(
@@ -138,12 +146,12 @@ class _ShipmentMainState extends State<ShipmentMain> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: productList.length,
+      itemCount: context.read<PostItemCubit>().state.itemList!.length,
       itemBuilder: ((context, index) {
+        final post = context.read<PostItemCubit>();
+        final login = context.read<LoginCubit>();
         return detailsWidget(
-          product: productList[index],
-          context: context,
-        );
+            item: post.state.itemList![index], context: context);
       }),
     );
   }

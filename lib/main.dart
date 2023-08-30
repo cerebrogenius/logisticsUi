@@ -10,6 +10,7 @@ import 'package:my_bloc_app/shipment/screens/signup_screen/sign_in.dart';
 import 'package:my_bloc_app/shipment/screens/welcome_page/bloc/welcome_page_bloc.dart';
 import 'package:my_bloc_app/shipment/screens/welcome_page/welcome_page.dart';
 
+import 'shipment/screens/account_screen/cubit/account_screen_cubit.dart';
 import 'shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'shipment/screens/post_item/cubit/post_item_cubit.dart';
 
@@ -39,11 +40,19 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: ((context) => HomeScreenCubit()),
               ),
-               BlocProvider(
+              BlocProvider(
                 create: ((context) => PostItemCubit()),
+              ),
+               BlocProvider(
+                create: ((context) => AccountScreenCubit()),
               ),
             ],
             child: MaterialApp(
+              onUnknownRoute: (settings) {
+                return MaterialPageRoute(builder: (context) {
+                  return const LoginPage();
+                });
+              },
               routes: {
                 'ShipmentMain': (context) => const ShipmentMain(),
                 'MainPage': (context) => SignUpPage(),

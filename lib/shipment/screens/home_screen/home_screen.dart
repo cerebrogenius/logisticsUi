@@ -4,6 +4,7 @@ import 'package:my_bloc_app/shipment/screens/account_screen/account_screen.dart'
 import 'package:my_bloc_app/shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/main_page.dart';
+import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/post_screen.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 
@@ -17,7 +18,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    final items = context.read<PostItemCubit>();
     final login = context.read<LoginCubit>();
+    items.getItems(accessToken: login.state.access);
+    print(items.state.itemList);
     login.getUserDetails(login.state.access);
     super.initState();
   }

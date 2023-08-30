@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
-import 'package:my_bloc_app/shipment/models/product_model.dart';
 
 Widget appBarIcon(
     {required IconData iconName,
@@ -134,6 +135,8 @@ Widget myTextWidget(
     {required String text, double? opacity, Color? color, double? size}) {
   return Text(
     text,
+    softWrap: true,
+    overflow: TextOverflow.clip,
     style: TextStyle(
       fontSize: size ?? 25.sp,
       fontWeight: FontWeight.bold,
@@ -142,45 +145,55 @@ Widget myTextWidget(
   );
 }
 
-Widget detailsWidget(
-    {required Product product, required BuildContext context}) {
+Widget detailsWidget({required Items item, required BuildContext context}) {
   return Container(
     padding: EdgeInsets.all(10.h),
     margin: EdgeInsets.symmetric(vertical: 10.h),
     height: 150.h,
     width: 450.w,
     decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(15.r))),
+      color: Colors.white,
+      borderRadius: BorderRadius.all(
+        Radius.circular(15.r),
+      ),
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               height: 40.h,
               width: 40.h,
               decoration: BoxDecoration(
-                  color: product.onTheWay
-                      ? iconColorOrange.withOpacity(0.2)
-                      : iconColorGreen.withOpacity(0.2),
-                  borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                color: item.status == 'In Transit'
+                    ? iconColorOrange.withOpacity(0.2)
+                    : iconColorGreen.withOpacity(0.2),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.r),
+                ),
+              ),
               child: Icon(
-                product.onTheWay ? Icons.local_shipping : Icons.maps_home_work,
-                color: product.onTheWay ? iconColorOrange : iconColorGreen,
+                item.status == 'In Transit'
+                    ? Icons.local_shipping
+                    : Icons.maps_home_work,
+                color: item.status == 'In Transit'
+                    ? iconColorOrange
+                    : iconColorGreen,
               ),
             ),
-            SizedBox(
-              width: 10.w,
-            ),
-            Flexible(
+            SizedBox(width:10.w),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   myTextWidget(
-                      text: product.title, color: Colors.black, size: 18.sp),
+                      text: item.name?.toUpperCase() ?? 'null',
+                      color: Colors.black,
+                      size: 18.sp),
                   myTextWidget(
-                      text: product.productId,
+                      text: item.note ?? 'null',
                       color: Colors.black.withOpacity(0.5),
                       size: 10.sp,
                       opacity: 0.1),
@@ -196,18 +209,19 @@ Widget detailsWidget(
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(width: 45.h),
-            trackingBar(product: product, context: context),
+            trackingBar(item: item, context: context),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                getLocationAndStatus(info: product.source, header: 'from'),
+                getLocationAndStatus(
+                    info: item.owner ?? 'null', header: 'Owner'),
                 SizedBox(
                   height: 7.h,
                 ),
-                getLocationAndStatus(info: product.destination, header: 'To'),
+                getLocationAndStatus(
+                    info: item.location ?? 'null', header: 'To'),
               ],
             ),
             SizedBox(
@@ -216,12 +230,16 @@ Widget detailsWidget(
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                getLocationAndStatus(info: product.status, header: 'Status'),
+                getLocationAndStatus(
+                    info: item.status ?? 'null', header: 'Status'),
                 SizedBox(
                   height: 7.h,
                 ),
                 getLocationAndStatus(
-                    info: product.price.toString(), header: 'Price'),
+                    info: formattedDate(
+                      item.date ?? DateTime.now(),
+                    ),
+                    header: 'Date'),
               ],
             )
           ],
@@ -231,7 +249,11 @@ Widget detailsWidget(
   );
 }
 
-Widget trackingBar({required Product product, required BuildContext context}) {
+String formattedDate(DateTime date) {
+  return DateFormat.yMMMMd().format(date);
+}
+
+Widget trackingBar({required Items item, required BuildContext context}) {
   return Container(
     alignment: Alignment.centerLeft,
     width: 20.w,
@@ -242,15 +264,15 @@ Widget trackingBar({required Product product, required BuildContext context}) {
           child: Icon(
             Icons.circle,
             size: 9,
-            color: product.onTheWay ? indicatorBlue : indicatorGreen,
+            color: item.status == 'In Transit' ? indicatorBlue : indicatorGreen,
           ),
         ),
         Container(
-          color: product.onTheWay ? indicatorBlue : indicatorGreen,
-          height: product.onTheWay ? 12.h : 10.h,
+          color: item.status == 'In Transit' ? indicatorBlue : indicatorGreen,
+          height: item.status == 'In Transit' ? 12.h : 10.h,
           width: 2.0,
         ),
-        product.onTheWay
+        item.status == 'In Transit'
             ? const Icon(Icons.circle, size: 15, color: indicatorBlue)
             : Container(
                 height: 16.w,
@@ -258,13 +280,14 @@ Widget trackingBar({required Product product, required BuildContext context}) {
                 color: indicatorGreen,
               ),
         Container(
-          color: product.onTheWay ? indicatorGrey : indicatorGreen,
-          height: product.onTheWay ? 14.h : 11.h,
+          color: item.status == 'In Transit' ? indicatorGrey : indicatorGreen,
+          height: item.status == 'In Transit' ? 14.h : 11.h,
           width: 2.0,
         ),
         Icon(Icons.circle,
-            size: product.onTheWay ? 9 : 15,
-            color: product.onTheWay ? indicatorGrey : indicatorGreen),
+            size: item.status == 'In Transit' ? 9 : 15,
+            color:
+                item.status == 'In Transit' ? indicatorGrey : indicatorGreen),
       ],
     ),
   );
@@ -332,17 +355,19 @@ class DetailsForm extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontSize: 16.sp, color:titleColor?? Colors.black.withOpacity(0.4)),
+                fontSize: 16.sp,
+                color: titleColor ?? Colors.black.withOpacity(0.4)),
           ),
           Row(
             children: [
               Container(
-                height: 40.h,
+                height: 50.h,
                 width: 300.w,
                 decoration: BoxDecoration(
                     border: Border.all(width: 4, color: Colors.transparent),
                     color: Colors.transparent),
                 child: TextField(
+                  maxLines: 2,
                   decoration: InputDecoration(
                       enabled: isClickAble ?? true, hintText: hintText ?? ''),
                   controller: controller,

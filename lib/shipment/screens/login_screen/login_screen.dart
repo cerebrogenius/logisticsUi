@@ -12,9 +12,9 @@ import '../signUp_screen_widgets.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
   static TextEditingController emailController =
-      TextEditingController(text: 'cerebro@gmail.com');
+      TextEditingController(text: 'yakubayoola96@gmail.com');
   static TextEditingController passwordController =
-      TextEditingController(text: 'cerebro');
+      TextEditingController(text: 'yakub');
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-showAlert({required BuildContext context}) {
+showAlert({required BuildContext context,}) {
   return showDialog(
       context: context,
       builder: (context) {
@@ -148,3 +148,4 @@ showAlert({required BuildContext context}) {
         );
       });
 }
+

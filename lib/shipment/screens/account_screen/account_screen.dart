@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:my_bloc_app/shipment/screens/account_screen/cubit/account_screen_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
+import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -16,7 +18,8 @@ class AccountScreen extends StatelessWidget {
       child: BlocListener<LoginCubit, LoginCubitState>(
         listener: (context, state) {
           if (state.isLoggedIn == false) {
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
               return const LoginPage();
             }), (route) => false);
           }
@@ -112,6 +115,42 @@ class AccountScreen extends StatelessWidget {
                                 color: Colors.white),
                           ),
                         ),
+                        state.user!.isActive == false
+                            ? Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    final account =
+                                        context.read<AccountScreenCubit>();
+                                    account.checkStatus(
+                                        accessToken: state.access);
+                                    showAlert(context: context);
+                                  },
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(right: 5.w, left: 3.w),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        width: 3,
+                                        color: state.user!.isActive == false
+                                            ? Colors.blue
+                                            : Colors.green,
+                                      ),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(7),
+                                      ),
+                                    ),
+                                    height: 40.h,
+                                    child: const Center(
+                                      child: Text(
+                                        'Activate your account',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink()
                       ],
                     );
                   },
@@ -133,4 +172,49 @@ class AccountScreen extends StatelessWidget {
 
 String formattedDate(DateTime date) {
   return DateFormat.yMMMMd().format(date);
+}
+
+showAlert({
+  required BuildContext context,
+}) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 100,
+            width: 400,
+            child: BlocBuilder<AccountScreenCubit, AccountScreenState>(
+              builder: (context, state) {
+                if (state.accountstate == ConfirmState.loading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state.accountstate == ConfirmState.success) {
+                  return const Icon(
+                    Icons.check,
+                    color: Colors.green,
+                    size: 100,
+                  );
+                } else if (state.accountstate == ConfirmState.error) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 0, left: 0),
+                      child: Text(
+                        state.response,
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15.sp),
+                      ),
+                    ),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+      });
 }

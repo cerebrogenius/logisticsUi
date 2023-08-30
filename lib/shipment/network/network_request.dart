@@ -100,12 +100,42 @@ class HttpRequest {
         ),
       );
       if (response.statusCode == 200) {
-        print(response.body);
-      } else {
-        print(response.body);
-      }
+      } else {}
       return 'success';
     } catch (e) {}
     return 'error';
+  }
+
+  Future<String> confirmUser({required String accessToken}) async {
+    try {
+      Response response = await client.get(
+        Uri.https(baseUrl, '/users/confirm?token=$accessToken'),
+      );
+      if (response.statusCode == 200) {
+        return 'success';
+      } else {
+        return 'error';
+      }
+    } on Exception catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<List> getItems({required String accessToken}) async {
+    try {
+      Response response =
+          await client.get(Uri.https(baseUrl, '/items/'), headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      });
+      if (response.statusCode == 200) {
+        List itemList = jsonDecode(response.body);
+        return itemList;
+      } else {
+        return ['error'];
+      }
+    } on Exception catch (e) {
+      return[e.toString()];
+    }
   }
 }

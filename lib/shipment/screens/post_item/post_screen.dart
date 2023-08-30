@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
+import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 import '../../models/item_model.dart';
@@ -137,14 +138,21 @@ class PostItemScreen extends StatelessWidget {
             ],
           ),
           TextButton(
-              onPressed: () {
-                final detail = context.read<PostItemCubit>().state;
-                final access = context.read<LoginCubit>().state;
+            onPressed: () {
+              final detail = context.read<PostItemCubit>().state;
+              final access = context.read<LoginCubit>().state;
+              if (nameController.text.isNotEmpty &&
+                  emailController.text.isNotEmpty &&
+                  noteController.text.isNotEmpty &&
+                  phoneController.text.isNotEmpty &&
+                  locationController.text.isNotEmpty &&
+                  ownerController.text.isNotEmpty &&
+                  detail.date.toString().isNotEmpty) {
                 final Items item = Items(
                     name: nameController.text,
                     note: noteController.text,
                     phoneNumber: phoneController.text,
-                    date: detail.date??DateTime.now(),
+                    date: detail.date ?? DateTime.now(),
                     location: locationController.text,
                     owner: ownerController.text,
                     status: detail.currentStatus!,
@@ -152,8 +160,15 @@ class PostItemScreen extends StatelessWidget {
                 context
                     .read<PostItemCubit>()
                     .postItem(item: item, accesstoken: access.access);
-              },
-              child: const Text('Submit'))
+              }
+              MessageSnackBar().showMessage(
+                  context: context,
+                  message: 'Fields can\'t be empty,',
+                  isError: true,
+                  icon: Icons.error_outline);
+            },
+            child: const Text('Submit'),
+          ),
         ],
       ),
     );

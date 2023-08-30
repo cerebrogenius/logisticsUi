@@ -10,15 +10,19 @@ enum ItemStatus { processing, created, delivered, inTransit }
 class PostItemCubitState extends Equatable {
   final String? currentStatus;
   final DateTime? date;
+  final List<Items>? itemList;
 
   const PostItemCubitState({
     this.currentStatus = 'Processing',
     this.date,
+    this.itemList,
   });
-  PostItemCubitState copyWith({DateTime? date, String? status}) {
+  PostItemCubitState copyWith(
+      {DateTime? date, String? status, List<Items>? itemList}) {
     return PostItemCubitState(
       date: date,
       currentStatus: status ?? this.currentStatus,
+      itemList: itemList ?? this.itemList,
     );
   }
 
@@ -46,8 +50,18 @@ class PostItemCubit extends Cubit<PostItemCubitState> {
     try {
       final reply =
           await HttpRequest().postItem(item: item, accesstoken: accesstoken);
-      print(reply);
     } on Exception catch (e) {}
     return 'failure';
+  }
+
+ Future<Items> getItems({required String accessToken}) async {
+    Items items = Items();
+    List<Items> finalList = [];
+    List rawItems = await HttpRequest().getItems(accessToken: accessToken);
+    for (Map<String, dynamic> item in rawItems) {
+      finalList.add(items.itemFromNetwork(item));
+    }
+    emit(state.copyWith(itemList: finalList),);
+  return items;
   }
 }
