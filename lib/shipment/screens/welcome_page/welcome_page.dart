@@ -2,6 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_bloc_app/shipment/screens/welcome_page/bloc/welcome_page_bloc.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -24,21 +25,21 @@ class WelcomePage extends StatelessWidget {
                 },
                 children: [
                   WelcomeWidget(
-                    imagePath: 'assets/images/image1.jpg',
+                    imagePath: 'image1new.svg',
                     message: 'Welcome To Our Logistics App',
                     buttonName: 'Next',
                     controller: controller,
                     index: 0,
                   ),
                   WelcomeWidget(
-                    imagePath: 'assets/images/image2.jpg',
+                    imagePath: 'newImage21.svg',
                     message: 'Easy Deliver Anywhere You Are',
                     buttonName: 'Next',
                     controller: controller,
                     index: 1,
                   ),
                   WelcomeWidget(
-                    imagePath: 'assets/images/image3.jpg',
+                    imagePath: 'image3new.svg',
                     message: 'Order At The Comfort Of Your Home',
                     buttonName: 'Get Started',
                     controller: controller,
@@ -89,14 +90,14 @@ class WelcomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 500.h,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.contain,
-            ),
+          width: 300.h,
+          child: SvgPicture.asset(
+            fit: BoxFit.contain,
+            height: 400,
+            width: 300,
+            'assets/svg/$imagePath',
           ),
         ),
         Text(

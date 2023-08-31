@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
-import '../data/product_data.dart';
 import '../utilities/widgets/widgets.dart';
 import 'login_screen/cubit/login_cubit.dart';
 
@@ -158,7 +157,16 @@ class _ShipmentMainState extends State<ShipmentMain> {
             );
           } else if (items.connectionState == ConnectionState.done) {
             if (items.hasError) {
-              return Text(items.error.toString());
+              return Container(
+                width: 450.w,
+                height: 150.h,
+                color: Colors.white,
+                child: Center(
+                  child: Text(
+                    items.error.toString(),
+                  ),
+                ),
+              );
             } else if (items.hasData) {
               return ListView.builder(
                   shrinkWrap: true,
@@ -171,7 +179,15 @@ class _ShipmentMainState extends State<ShipmentMain> {
                   });
             }
           }
-          return const Text('You Have No Posts Yet');
+          return Container(
+            width: 450.w,
+            height: 150.h,
+            color: Colors.white,
+            child: const Text(
+              'You Have No Posts Yet',
+              style: TextStyle(color: Colors.black),
+            ),
+          );
         });
     // return ListView.builder(
     //   physics: const NeverScrollableScrollPhysics(),

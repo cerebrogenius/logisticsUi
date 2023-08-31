@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:my_bloc_app/shipment/screens/account_screen/cubit/account_screen_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
-import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -171,7 +170,7 @@ class AccountScreen extends StatelessWidget {
 }
 
 String formattedDate(DateTime date) {
-  return DateFormat.yMMMMd().format(date);
+  return DateFormat.yMMMd().format(date);
 }
 
 showAlert({

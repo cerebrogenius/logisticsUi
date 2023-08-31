@@ -96,7 +96,8 @@ class PostItemScreen extends StatelessWidget {
                   return DetailsForm(
                     title: 'Date',
                     hintText: formattedDate(
-                      state.date ?? DateTime.now(),
+                      state.date??DateTime.now()
+                      ,
                     ),
                     titleColor: Colors.blue,
                     isClickAble: false,
@@ -141,31 +142,34 @@ class PostItemScreen extends StatelessWidget {
             onPressed: () {
               final detail = context.read<PostItemCubit>().state;
               final access = context.read<LoginCubit>().state;
-              if (nameController.text.isNotEmpty &&
-                  emailController.text.isNotEmpty &&
-                  noteController.text.isNotEmpty &&
-                  phoneController.text.isNotEmpty &&
-                  locationController.text.isNotEmpty &&
-                  ownerController.text.isNotEmpty &&
-                  detail.date.toString().isNotEmpty) {
-                final Items item = Items(
-                    name: nameController.text,
-                    note: noteController.text,
-                    phoneNumber: phoneController.text,
-                    date: detail.date ?? DateTime.now(),
-                    location: locationController.text,
-                    owner: ownerController.text,
-                    status: detail.currentStatus!,
-                    email: emailController.text);
-                context
-                    .read<PostItemCubit>()
-                    .postItem(item: item, accesstoken: access.access);
+              if (nameController.text.isEmpty ||
+                  emailController.text.isEmpty ||
+                  noteController.text.isEmpty ||
+                  phoneController.text.isEmpty ||
+                  locationController.text.isEmpty ||
+                  ownerController.text.isEmpty ||
+                  detail.date!.toIso8601String().toString().isEmpty) {
+                MessageSnackBar().showMessage(
+                    context: context,
+                    message: 'Fields can\'t be empty,',
+                    isError: true,
+                    icon: Icons.error_outline);
+                return;
               }
-              MessageSnackBar().showMessage(
-                  context: context,
-                  message: 'Fields can\'t be empty,',
-                  isError: true,
-                  icon: Icons.error_outline);
+
+              final Items item = Items(
+                name: nameController.text,
+                note: noteController.text,
+                phoneNumber: phoneController.text,
+                date: detail.date ?? DateTime.now(),
+                location: locationController.text,
+                owner: ownerController.text,
+                status: detail.currentStatus!,
+                email: emailController.text,
+              );
+              context
+                  .read<PostItemCubit>()
+                  .postItem(item: item, accesstoken: access.access);
             },
             child: const Text('Submit'),
           ),

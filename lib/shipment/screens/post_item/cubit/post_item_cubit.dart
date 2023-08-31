@@ -20,8 +20,8 @@ class PostItemCubitState extends Equatable {
   PostItemCubitState copyWith(
       {DateTime? date, String? status, List<Items>? itemList}) {
     return PostItemCubitState(
-      date: date,
-      currentStatus: status ?? this.currentStatus,
+      date: date??this.date,
+      currentStatus: status ?? currentStatus,
       itemList: itemList ?? this.itemList,
     );
   }

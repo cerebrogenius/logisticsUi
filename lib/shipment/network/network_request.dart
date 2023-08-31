@@ -155,8 +155,10 @@ class HttpRequest {
           yield processed;
         }
       } else {
-        throw Exception('failed');
+        throw Exception('Expired Time');
       }
-    } on Exception catch (e) {}
+    } on Exception catch (e) {
+      throw Exception(e.toString(),);
+    }
   }
 }
