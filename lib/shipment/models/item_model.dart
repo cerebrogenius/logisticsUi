@@ -7,6 +7,7 @@ class Items {
   final String? owner;
   final String? email;
   final String? phoneNumber;
+  final String? id;
 
   Items({
     this.name,
@@ -17,6 +18,7 @@ class Items {
     this.owner,
     this.email,
     this.phoneNumber,
+    this.id,
   });
 
   Map<String, dynamic> itemToMap({required Items item}) {
@@ -48,6 +50,7 @@ class Items {
       owner: map['owner']['name'],
       email: map['owner']['email'],
       phoneNumber: map['owner']['phone_no'].toString(),
+      id: map['_id']
     );
   }
 }

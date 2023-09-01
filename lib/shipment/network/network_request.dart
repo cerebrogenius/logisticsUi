@@ -100,8 +100,10 @@ class HttpRequest {
         ),
       );
       if (response.statusCode == 200) {
-      } else {}
-      return 'success';
+        return 'success';
+      } else {
+        print(response.body);
+      }
     } catch (e) {}
     return 'error';
   }
@@ -121,7 +123,9 @@ class HttpRequest {
     }
   }
 
-  Future<List> getItems({required String accessToken}) async {
+  getItems({required String accessToken}) async {
+    Items toConvert = Items();
+    List<Items> itemAsObject = [];
     try {
       Response response =
           await client.get(Uri.https(baseUrl, '/items/'), headers: {
@@ -130,12 +134,17 @@ class HttpRequest {
       });
       if (response.statusCode == 200) {
         List itemList = jsonDecode(response.body);
-        return itemList;
+        for (Map<String, dynamic> item in itemList) {
+          itemAsObject.add(
+            toConvert.itemFromNetwork(item),
+          );
+        }
+        return itemAsObject;
       } else {
-        return ['error'];
+        return 'error';
       }
     } on Exception catch (e) {
-      return [e.toString()];
+      
     }
   }
 
@@ -158,7 +167,23 @@ class HttpRequest {
         throw Exception('Expired Time');
       }
     } on Exception catch (e) {
-      throw Exception(e.toString(),);
+      throw Exception(
+        e.toString(),
+      );
     }
+  }
+
+  Future<String> deleteItem(String id, String accessToken) async {
+    String error = '';
+    Response response =
+        await client.delete(Uri.https(baseUrl, '/items/${id}'), headers: {
+      'Content-type': 'application/json',
+      'Authorization': 'Bearer $accessToken',
+    });
+
+    if (response.statusCode != 200) {
+      print(response.statusCode);
+    } else {}
+    return error;
   }
 }

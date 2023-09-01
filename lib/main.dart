@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/screens/home_screen/home_screen.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/login_screen.dart';
-import 'package:my_bloc_app/shipment/screens/main_page.dart';
+import 'package:my_bloc_app/shipment/screens/welcome_page/main_page/main_page.dart';
 import 'package:my_bloc_app/shipment/screens/signup_screen/cubit/signIn_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/signup_screen/sign_in.dart';
 import 'package:my_bloc_app/shipment/screens/welcome_page/bloc/welcome_page_bloc.dart';
@@ -13,6 +13,7 @@ import 'package:my_bloc_app/shipment/screens/welcome_page/welcome_page.dart';
 import 'shipment/screens/account_screen/cubit/account_screen_cubit.dart';
 import 'shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'shipment/screens/post_item/cubit/post_item_cubit.dart';
+import 'shipment/screens/welcome_page/main_page/cubit/main_page_cubit.dart';
 
 void main() {
   runApp(
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
               ),
                BlocProvider(
                 create: ((context) => AccountScreenCubit()),
+              ),
+              BlocProvider(
+                create: ((context) => MainPageCubit()),
               ),
             ],
             child: MaterialApp(

@@ -27,156 +27,183 @@ class PostItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final post = BlocProvider.of<PostItemCubit>(context);
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Add Item',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 25.sp,
-                fontWeight: FontWeight.bold,
+      child: BlocListener<PostItemCubit, PostItemCubitState>(
+        listener: (context, state) {
+          if (state.posted == true && nameController.text.isEmpty) {
+            state.copyWith(
+              date: DateTime.now(),
+            );
+            showPostDialog(state.posted, context);
+          }
+        },
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Add Item',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 25.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          DetailsForm(
-            title: 'Product Name',
-            controller: nameController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          DetailsForm(
-            title: 'Owner Name',
-            controller: ownerController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          DetailsForm(
-            title: 'Email',
-            controller: emailController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          DetailsForm(
-            title: 'Phone Number',
-            controller: phoneController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          DetailsForm(
-            title: 'Note',
-            controller: noteController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          DetailsForm(
-            title: 'Location',
-            controller: locationController,
-            titleColor: Colors.blue,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Stack(
-            children: [
-              BlocBuilder<PostItemCubit, PostItemCubitState>(
-                builder: (context, state) {
-                  return DetailsForm(
-                    title: 'Date',
-                    hintText: formattedDate(
-                      state.date??DateTime.now()
-                      ,
-                    ),
-                    titleColor: Colors.blue,
-                    isClickAble: false,
-                  );
-                },
-              ),
-              Positioned(
-                right: 32.w,
-                bottom: 0.h,
-                child: IconButton(
-                  onPressed: () async {
-                    context.read<PostItemCubit>().updateDate(
-                          newDate: await _showDate(context),
-                        );
+            DetailsForm(
+              title: 'Product Name',
+              controller: nameController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DetailsForm(
+              title: 'Owner Name',
+              controller: ownerController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DetailsForm(
+              title: 'Email',
+              controller: emailController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DetailsForm(
+              title: 'Phone Number',
+              controller: phoneController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DetailsForm(
+              title: 'Note',
+              controller: noteController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DetailsForm(
+              title: 'Location',
+              controller: locationController,
+              titleColor: Colors.blue,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Stack(
+              children: [
+                BlocBuilder<PostItemCubit, PostItemCubitState>(
+                  builder: (context, state) {
+                    return DetailsForm(
+                      title: 'Date',
+                      hintText: formattedDate(
+                        state.date ?? DateTime.now(),
+                      ),
+                      titleColor: Colors.blue,
+                      isClickAble: false,
+                    );
                   },
-                  icon: const Icon(
-                    Icons.calendar_month,
-                    color: Colors.blue,
-                  ),
                 ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Stack(
-            children: [
-              const DetailsForm(
-                title: 'Status',
-                titleColor: Colors.blue,
-                isClickAble: false,
-              ),
-              Positioned(
-                right: 32.w,
-                bottom: 0.h,
-                child: const DropDownStatus(),
-              )
-            ],
-          ),
-          TextButton(
-            onPressed: () {
-              final detail = context.read<PostItemCubit>().state;
-              final access = context.read<LoginCubit>().state;
-              if (nameController.text.isEmpty ||
-                  emailController.text.isEmpty ||
-                  noteController.text.isEmpty ||
-                  phoneController.text.isEmpty ||
-                  locationController.text.isEmpty ||
-                  ownerController.text.isEmpty ||
-                  detail.date!.toIso8601String().toString().isEmpty) {
-                MessageSnackBar().showMessage(
-                    context: context,
-                    message: 'Fields can\'t be empty,',
-                    isError: true,
-                    icon: Icons.error_outline);
-                return;
-              }
+                Positioned(
+                  right: 32.w,
+                  bottom: 0.h,
+                  child: IconButton(
+                    onPressed: () async {
+                      context.read<PostItemCubit>().updateDate(
+                            newDate: await _showDate(context),
+                          );
+                    },
+                    icon: const Icon(
+                      Icons.calendar_month,
+                      color: Colors.blue,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Stack(
+              children: [
+                const DetailsForm(
+                  title: 'Status',
+                  titleColor: Colors.blue,
+                  isClickAble: false,
+                ),
+                Positioned(
+                  right: 32.w,
+                  bottom: 0.h,
+                  child: const DropDownStatus(),
+                )
+              ],
+            ),
+            TextButton(
+              onPressed: () async {
+                final detail = context.read<PostItemCubit>().state;
+                final access = context.read<LoginCubit>().state;
+                if (nameController.text.isEmpty ||
+                    emailController.text.isEmpty ||
+                    noteController.text.isEmpty ||
+                    phoneController.text.isEmpty ||
+                    locationController.text.isEmpty ||
+                    ownerController.text.isEmpty ||
+                    detail.date.toString().isEmpty) {
+                  MessageSnackBar().showMessage(
+                      context: context,
+                      message: 'Fields can\'t be empty,',
+                      isError: true,
+                      icon: Icons.error_outline);
+                  return;
+                }
 
-              final Items item = Items(
-                name: nameController.text,
-                note: noteController.text,
-                phoneNumber: phoneController.text,
-                date: detail.date ?? DateTime.now(),
-                location: locationController.text,
-                owner: ownerController.text,
-                status: detail.currentStatus!,
-                email: emailController.text,
-              );
-              context
-                  .read<PostItemCubit>()
-                  .postItem(item: item, accesstoken: access.access);
-            },
-            child: const Text('Submit'),
-          ),
-        ],
+                final Items item = Items(
+                  name: nameController.text,
+                  note: noteController.text,
+                  phoneNumber: phoneController.text,
+                  date: detail.date ?? DateTime.now(),
+                  location: locationController.text,
+                  owner: ownerController.text,
+                  status: detail.currentStatus!,
+                  email: emailController.text,
+                );
+
+                post.postItem(item: item, accesstoken: access.access);
+                nameController.clear();
+                noteController.clear();
+                phoneController.clear();
+                locationController.clear();
+                ownerController.clear();
+                emailController.clear();
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+showPostDialog(final bool posted, BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext cotext) {
+        return AlertDialog(
+          content: posted == true
+              ? const Text('You posted Successfully')
+              : const Text('Failed'),
+        );
+      });
 }
 
 class DropDownStatus extends StatelessWidget {

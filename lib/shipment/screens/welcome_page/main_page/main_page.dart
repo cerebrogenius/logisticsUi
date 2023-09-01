@@ -4,8 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
-import '../utilities/widgets/widgets.dart';
-import 'login_screen/cubit/login_cubit.dart';
+import 'package:my_bloc_app/shipment/screens/welcome_page/main_page/cubit/main_page_cubit.dart';
+import '../../../utilities/widgets/widgets.dart';
+import '../../login_screen/cubit/login_cubit.dart';
 
 class ShipmentMain extends StatefulWidget {
   const ShipmentMain({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _ShipmentMainState extends State<ShipmentMain> {
                 child: InkWell(
                   onTap: () {
                     final access = context.read<LoginCubit>().state.access;
-                    context.read<PostItemCubit>().getItems(accessToken: access);
+                    // context.read<PostItemCubit>().getItems(accessToken: access);
                   },
                   child: const TextTitleWidget(
                     text: 'Track Your Shipment',
@@ -144,7 +145,8 @@ class _ShipmentMainState extends State<ShipmentMain> {
   ordersList() {
     return StreamBuilder<List<Items>>(
         stream: HttpRequest().getItemStream(
-            accessToken: context.read<LoginCubit>().state.access),
+          accessToken: context.read<LoginCubit>().state.access,
+        ),
         builder: (BuildContext context, items) {
           if (items.connectionState == ConnectionState.waiting) {
             return Container(
@@ -174,8 +176,12 @@ class _ShipmentMainState extends State<ShipmentMain> {
                   scrollDirection: Axis.vertical,
                   itemCount: items.data!.length,
                   itemBuilder: (context, index) {
-                    return detailsWidget(
-                        item: items.data![index], context: context);
+                    return InkWell(
+                      onLongPress: (() =>
+                          showOptions(context, items.data![index])),
+                      child: detailsWidget(
+                          item: items.data![index], context: context),
+                    );
                   });
             }
           }
@@ -189,17 +195,32 @@ class _ShipmentMainState extends State<ShipmentMain> {
             ),
           );
         });
-    // return ListView.builder(
-    //   physics: const NeverScrollableScrollPhysics(),
-    //   shrinkWrap: true,
-    //   scrollDirection: Axis.vertical,
-    //   itemCount: context.read<PostItemCubit>().state.itemList!.length,
-    //   itemBuilder: ((context, index) {
-    //     final post = context.read<PostItemCubit>();
-    //     final login = context.read<LoginCubit>();
-    //     return detailsWidget(
-    //         item: post.state.itemList![index], context: context);
-    //   }),
-    // );
   }
+}
+
+showOptions(
+  BuildContext context,
+  Items item,
+) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return BlocBuilder<PostItemCubit, PostItemCubitState>(
+          builder: (context, state) {
+            return AlertDialog(
+              actions: [
+                InkWell(
+                  onTap: () {
+                    HttpRequest().deleteItem(
+                        item.id ?? '', context.read<LoginCubit>().state.access);
+
+                    Navigator.pop(context);
+                  },
+                  child: const Text('delete'),
+                )
+              ],
+            );
+          },
+        );
+      });
 }
