@@ -13,7 +13,7 @@ class PostItemCubitState extends Equatable {
   final List<Items>? itemList;
 
   const PostItemCubitState({
-    this.posted=false,
+    this.posted = false,
     this.currentStatus = 'Processing',
     this.date,
     this.itemList,
@@ -64,16 +64,5 @@ class PostItemCubit extends Cubit<PostItemCubitState> {
     return 'failure';
   }
 
-  Future<Items> getItems({required String accessToken}) async {
-    Items items = Items();
-    List<Items> finalList = [];
-    List rawItems = await HttpRequest().getItems(accessToken: accessToken);
-    for (Map<String, dynamic> item in rawItems) {
-      finalList.add(items.itemFromNetwork(item));
-    }
-    emit(
-      state.copyWith(itemList: finalList),
-    );
-    return items;
-  }
+ 
 }

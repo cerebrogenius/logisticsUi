@@ -124,8 +124,6 @@ class HttpRequest {
   }
 
   getItems({required String accessToken}) async {
-    Items toConvert = Items();
-    List<Items> itemAsObject = [];
     try {
       Response response =
           await client.get(Uri.https(baseUrl, '/items/'), headers: {
@@ -133,19 +131,13 @@ class HttpRequest {
         'Authorization': 'Bearer $accessToken',
       });
       if (response.statusCode == 200) {
-        List itemList = jsonDecode(response.body);
-        for (Map<String, dynamic> item in itemList) {
-          itemAsObject.add(
-            toConvert.itemFromNetwork(item),
-          );
-        }
-        return itemAsObject;
+        List<Map<String, dynamic>> itemList = jsonDecode(response.body);
+
+        return itemList;
       } else {
         return 'error';
       }
-    } on Exception catch (e) {
-      
-    }
+    } on Exception catch (e) {}
   }
 
   Stream<List<Items>> getItemStream({required String accessToken}) async* {
@@ -158,8 +150,10 @@ class HttpRequest {
       if (response.statusCode == 200) {
         List itemList = jsonDecode(response.body);
         List<Items> processed = [];
+        processed.clear();
         for (Map<String, dynamic> item in itemList) {
           final Items response = Items().itemFromNetwork(item);
+
           processed.add(response);
           yield processed;
         }

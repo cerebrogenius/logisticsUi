@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
-import 'package:my_bloc_app/shipment/screens/welcome_page/main_page/cubit/main_page_cubit.dart';
 import '../../../utilities/widgets/widgets.dart';
 import '../../login_screen/cubit/login_cubit.dart';
 
@@ -16,6 +15,7 @@ class ShipmentMain extends StatefulWidget {
 }
 
 class _ShipmentMainState extends State<ShipmentMain> {
+  String rebuild = '';
   @override
   void initState() {
     final login = context.read<LoginCubit>();
@@ -135,18 +135,27 @@ class _ShipmentMainState extends State<ShipmentMain> {
                 ),
               ],
             ),
-            ordersList(),
+            const OrdersList(),
           ],
         ),
       ),
     );
   }
+}
 
-  ordersList() {
+class OrdersList extends StatefulWidget {
+  const OrdersList({Key? key}) : super(key: key);
+
+  @override
+  State<OrdersList> createState() => _OrdersListState();
+}
+
+class _OrdersListState extends State<OrdersList> {
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<List<Items>>(
         stream: HttpRequest().getItemStream(
-          accessToken: context.read<LoginCubit>().state.access,
-        ),
+            accessToken: context.read<LoginCubit>().state.access),
         builder: (BuildContext context, items) {
           if (items.connectionState == ConnectionState.waiting) {
             return Container(
@@ -213,7 +222,7 @@ showOptions(
                   onTap: () {
                     HttpRequest().deleteItem(
                         item.id ?? '', context.read<LoginCubit>().state.access);
-
+                        
                     Navigator.pop(context);
                   },
                   child: const Text('delete'),

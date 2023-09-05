@@ -18,10 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    final items = context.read<PostItemCubit>();
     final login = context.read<LoginCubit>();
-    items.getItems(accessToken: login.state.access);
-    print(items.state.itemList);
     login.getUserDetails(login.state.access);
     super.initState();
   }
