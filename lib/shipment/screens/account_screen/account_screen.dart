@@ -101,10 +101,10 @@ class AccountScreen extends StatelessWidget {
                           ),
                           height: 40.h,
                           width: 200.w,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.all(
-                              Radius.circular(7),
+                              Radius.circular(7.r),
                             ),
                           ),
                           child: Center(
@@ -130,13 +130,13 @@ class AccountScreen extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
-                                        width: 3,
+                                        width: 3.w,
                                         color: state.user!.isActive == false
                                             ? Colors.blue
                                             : Colors.green,
                                       ),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(7),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(7.r),
                                       ),
                                     ),
                                     height: 40.h,
@@ -177,43 +177,44 @@ showAlert({
   required BuildContext context,
 }) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: SizedBox(
-            height: 100,
-            width: 400,
-            child: BlocBuilder<AccountScreenCubit, AccountScreenState>(
-              builder: (context, state) {
-                if (state.accountstate == ConfirmState.loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state.accountstate == ConfirmState.success) {
-                  return const Icon(
-                    Icons.check,
-                    color: Colors.green,
-                    size: 100,
-                  );
-                } else if (state.accountstate == ConfirmState.error) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 0, left: 0),
-                      child: Text(
-                        state.response,
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 15.sp),
-                      ),
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        content: SizedBox(
+          height: 100.h,
+          width: 400.w,
+          child: BlocBuilder<AccountScreenCubit, AccountScreenState>(
+            builder: (context, state) {
+              if (state.accountstate == ConfirmState.loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state.accountstate == ConfirmState.success) {
+                return const Icon(
+                  Icons.check,
+                  color: Colors.green,
+                  size: 100,
+                );
+              } else if (state.accountstate == ConfirmState.error) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 0, left: 0),
+                    child: Text(
+                      state.response,
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15.sp),
                     ),
-                  );
-                }
+                  ),
+                );
+              }
 
-                return const SizedBox.shrink();
-              },
-            ),
+              return const SizedBox.shrink();
+            },
           ),
-        );
-      });
+        ),
+      );
+    },
+  );
 }

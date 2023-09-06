@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
+import 'package:my_bloc_app/shipment/screens/details_screen.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import '../../../utilities/widgets/widgets.dart';
 import '../../login_screen/cubit/login_cubit.dart';
@@ -44,21 +45,15 @@ class _ShipmentMainState extends State<ShipmentMain> {
                   left: 30.w,
                   bottom: 5.h,
                 ),
-                child: InkWell(
-                  onTap: () {
-                    final access = context.read<LoginCubit>().state.access;
-                    // context.read<PostItemCubit>().getItems(accessToken: access);
-                  },
-                  child: const TextTitleWidget(
-                    text: 'Track Your Shipment',
-                  ),
+                child: const TextTitleWidget(
+                  text: 'Track Your Shipment',
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(
-                  left: 30.0,
+                  left: 30.w,
                 ),
-                child: SearchBox(
+                child: const SearchBox(
                   hintText: 'Track Number',
                 ),
               ),
@@ -154,82 +149,134 @@ class _OrdersListState extends State<OrdersList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Items>>(
-        stream: HttpRequest().getItemStream(
-            accessToken: context.read<LoginCubit>().state.access),
-        builder: (BuildContext context, items) {
-          if (items.connectionState == ConnectionState.waiting) {
-            return Container(
-              color: Colors.blue,
-              height: 50.h,
-              width: 50.w,
-              child: const CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            );
-          } else if (items.connectionState == ConnectionState.done) {
-            if (items.hasError) {
-              return Container(
-                width: 450.w,
-                height: 150.h,
-                color: Colors.white,
-                child: Center(
-                  child: Text(
-                    items.error.toString(),
-                  ),
-                ),
-              );
-            } else if (items.hasData) {
-              return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: items.data!.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onLongPress: (() =>
-                          showOptions(context, items.data![index])),
-                      child: detailsWidget(
-                          item: items.data![index], context: context),
-                    );
-                  });
-            }
-          }
+      stream: HttpRequest()
+          .getItemStream(accessToken: context.read<LoginCubit>().state.access),
+      builder: (BuildContext context, items) {
+        if (items.connectionState == ConnectionState.waiting) {
           return Container(
-            width: 450.w,
-            height: 150.h,
-            color: Colors.white,
-            child: const Text(
-              'You Have No Posts Yet',
-              style: TextStyle(color: Colors.black),
+            color: Colors.blue,
+            height: 50.h,
+            width: 50.w,
+            child: const CircularProgressIndicator(
+              color: Colors.white,
             ),
           );
-        });
+        } else if (items.connectionState == ConnectionState.done) {
+          if (items.hasError) {
+            return Container(
+              width: 450.w,
+              height: 150.h,
+              color: Colors.white,
+              child: Center(
+                child: Text(
+                  items.error.toString(),
+                ),
+              ),
+            );
+          } else if (items.hasData) {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              itemCount: items.data!.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onLongPress: () async {
+                    final deleted =
+                        await showOptions(context, items.data![index]);
+                    if (deleted == false) {
+                      return;
+                    } else {
+                      setState(() {});
+                    }
+                  },
+                  child: detailsWidget(
+                    item: items.data![index],
+                    context: context,
+                  ),
+                );
+              },
+            );
+          }
+        }
+        return Container(
+          width: 450.w,
+          height: 150.h,
+          color: Colors.white,
+          child: const Text(
+            'You Have No Posts Yet',
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+      },
+    );
   }
 }
 
-showOptions(
+Future<bool> showOptions(
   BuildContext context,
   Items item,
-) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return BlocBuilder<PostItemCubit, PostItemCubitState>(
-          builder: (context, state) {
-            return AlertDialog(
-              actions: [
-                InkWell(
-                  onTap: () {
-                    HttpRequest().deleteItem(
-                        item.id ?? '', context.read<LoginCubit>().state.access);
-                        
-                    Navigator.pop(context);
-                  },
-                  child: const Text('delete'),
-                )
-              ],
-            );
-          },
-        );
-      });
+) async {
+  bool deleted = false;
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return BlocBuilder<PostItemCubit, PostItemCubitState>(
+        builder: (context, state) {
+          return AlertDialog(
+            content: Container(
+              height: 20.h,
+              child: Center(
+                child: Text(
+                  'OPTIONS:',
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  HttpRequest().deleteItem(
+                    item.id ?? '',
+                    context.read<LoginCubit>().state.access,
+                  );
+                  deleted = true;
+                  return Navigator.pop(context);
+                },
+                child: Text(
+                  'delete',
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return DetailsScreen(
+                          item: item,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: Text(
+                  'details',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      );
+    },
+  );
+  return deleted;
 }

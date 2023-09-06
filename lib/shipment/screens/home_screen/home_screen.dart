@@ -4,7 +4,6 @@ import 'package:my_bloc_app/shipment/screens/account_screen/account_screen.dart'
 import 'package:my_bloc_app/shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/login_screen/cubit/login_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/welcome_page/main_page/main_page.dart';
-import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/post_screen.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 

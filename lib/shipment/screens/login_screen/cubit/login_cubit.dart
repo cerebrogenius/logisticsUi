@@ -58,7 +58,9 @@ class LoginCubit extends Cubit<LoginCubitState> {
     required String password,
   }) async {
     try {
-      emit(state.copyWith(loginState: LoginStates.loading, error: ''),);
+      emit(
+        state.copyWith(loginState: LoginStates.loading, error: ''),
+      );
       List response = await HttpRequest().loginUser(
         email: email,
         password: password,
@@ -68,7 +70,9 @@ class LoginCubit extends Cubit<LoginCubitState> {
           state.copyWith(
               loginState: LoginStates.success, error: '', isLoggedIn: true),
         );
-        emit(state.copyWith(access: response[1]['access_token']));
+        emit(
+          state.copyWith(access: response[1]['access_token']),
+        );
       } else {
         emit(
           state.copyWith(loginState: LoginStates.error, error: response[0]),
@@ -76,7 +80,11 @@ class LoginCubit extends Cubit<LoginCubitState> {
         return response[0];
       }
     } on Exception catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(
+        state.copyWith(
+          error: e.toString(),
+        ),
+      );
     }
   }
 

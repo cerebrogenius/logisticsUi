@@ -54,10 +54,3 @@ class Items {
     );
   }
 }
-// {"_id":"64ee7c2c480687ed75e339d8",
-// "creator":"yakubayoola96@gmail.com",
-// "name":"system",
-// "timeline":[{"date":"2023-08-29 18:51:53.723636","status":"In Transit","note":"order created","location":"unilorin"}],
-// "owner":{"_id":"64ee7c2c480687ed75e339d9",
-// "name":"Shola","email":"shola@gmail.com",
-// "phone_no":8050664367}}

@@ -57,7 +57,7 @@ class MyAppBar extends StatelessWidget {
             appBarIcon(
                 iconName: Icons.notifications_sharp,
                 side: 'right',
-                padding: 13),
+                padding: 13.w),
             appBarIcon(iconName: Icons.person, side: 'right', padding: 30.w)
           ],
         )
@@ -81,7 +81,7 @@ class TextTitleWidget extends StatelessWidget {
           fontWeight: FontWeight.bold,
           fontSize: 20.sp,
           color: Colors.black.withOpacity(1),
-          wordSpacing: 4.0),
+          wordSpacing: 4.0.sp),
     );
   }
 }
@@ -98,26 +98,27 @@ class SearchBox extends StatelessWidget {
     return Row(
       children: [
         Container(
-            padding: EdgeInsets.only(left: 15.w),
-            width: 250.w,
-            height: 48.h,
-            decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10.r)),
-            child: TextField(
-              decoration: InputDecoration(
-                  hintText: hintText,
-                  hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.withOpacity(0.7)),
-                  border: InputBorder.none),
-            )),
+          padding: EdgeInsets.only(left: 15.w),
+          width: 250.w,
+          height: 48.h,
+          decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.1),
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10.r)),
+          child: TextField(
+            decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.withOpacity(0.7)),
+                border: InputBorder.none),
+          ),
+        ),
         SizedBox(
           width: 12.w,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0),
+          padding: EdgeInsets.only(top: 8.h),
           child: appBarIcon(
               iconName: Icons.search,
               side: 'right',
@@ -183,7 +184,7 @@ Widget detailsWidget({required Items item, required BuildContext context}) {
                     : iconColorGreen,
               ),
             ),
-            SizedBox(width:10.w),
+            SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,19 +271,19 @@ Widget trackingBar({required Items item, required BuildContext context}) {
         Container(
           color: item.status == 'In Transit' ? indicatorBlue : indicatorGreen,
           height: item.status == 'In Transit' ? 12.h : 10.h,
-          width: 2.0,
+          width: 2.w,
         ),
         item.status == 'In Transit'
             ? const Icon(Icons.circle, size: 15, color: indicatorBlue)
             : Container(
                 height: 16.w,
-                width: 2.0,
+                width: 2.w,
                 color: indicatorGreen,
               ),
         Container(
           color: item.status == 'In Transit' ? indicatorGrey : indicatorGreen,
           height: item.status == 'In Transit' ? 14.h : 11.h,
-          width: 2.0,
+          width: 2.w,
         ),
         Icon(Icons.circle,
             size: item.status == 'In Transit' ? 9 : 15,
@@ -310,8 +311,8 @@ Widget getLocationAndStatus({required String info, required String header}) {
 
 Widget buildButtomNavigationBar() {
   return Container(
-    decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(width: 5, color: Colors.blue))),
+    decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(width: 5.w, color: Colors.blue))),
     child: BottomNavigationBar(
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.blue,

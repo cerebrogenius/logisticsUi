@@ -12,100 +12,101 @@ import '../signUp_screen_widgets.dart';
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.account_circle,
-                size: 40,
-                color: indicatorBlue,
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.account_circle,
+                  size: 40,
+                  color: indicatorBlue,
+                ),
               ),
-            ),
-            Text(
-              'Create Account!',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.sp,
+              Text(
+                'Create Account!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.sp,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 35.h,
-            ),
-            DetailsForm(
-              controller: nameController,
-              title: 'Name',
-              icon: Icons.person,
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            DetailsForm(
-                controller: emailController,
-                title: 'Email',
-                icon: Icons.email_rounded),
-            SizedBox(
-              height: 10.h,
-            ),
-            DetailsForm(
-                controller: passwordController,
-                title: 'PassWord',
-                icon: Icons.lock_rounded),
-            SizedBox(
-              height: 10.h,
-            ),
-            CustomButton(
-              buttonName: 'Create',
-              icon: Icons.arrow_right_alt,
-              function: () async {
-                if (nameController.text.isEmpty ||
-                    emailController.text.isEmpty ||
-                    passwordController.text.isEmpty) {
-                  MessageSnackBar().showMessage(
-                    icon: Icons.error,
-                    context: context,
-                    message: 'Fields Can\'t Be Empty',
-                    isError: true,
-                  );
-
-                  return;
-                }
-
-                showAlert(context);
-
-                context.read<SignInCubit>().createUser(
-                      name: nameController.text,
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                nameController.clear();
-                emailController.clear();
-                passwordController.clear();
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: HaveAccount(
-                message: 'Already Have An Account?',
-                prompt: ' Login',
+              SizedBox(
+                height: 35.h,
+              ),
+              DetailsForm(
+                controller: nameController,
+                title: 'Name',
+                icon: Icons.person,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              DetailsForm(
+                  controller: emailController,
+                  title: 'Email',
+                  icon: Icons.email_rounded),
+              SizedBox(
+                height: 10.h,
+              ),
+              DetailsForm(
+                  controller: passwordController,
+                  title: 'PassWord',
+                  icon: Icons.lock_rounded),
+              SizedBox(
+                height: 10.h,
+              ),
+              CustomButton(
+                buttonName: 'Create',
+                icon: Icons.arrow_right_alt,
                 function: () async {
-                  Navigator.of(context).pushNamed('LoginPage');
+                  if (nameController.text.isEmpty ||
+                      emailController.text.isEmpty ||
+                      passwordController.text.isEmpty) {
+                    MessageSnackBar().showMessage(
+                      icon: Icons.error,
+                      context: context,
+                      message: 'Fields Can\'t Be Empty',
+                      isError: true,
+                    );
+
+                    return;
+                  }
+
+                  showAlert(context);
+
+                  context.read<SignInCubit>().createUser(
+                        name: nameController.text,
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                  nameController.clear();
+                  emailController.clear();
+                  passwordController.clear();
                 },
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: HaveAccount(
+                  message: 'Already Have An Account?',
+                  prompt: ' Login',
+                  function: () async {
+                    Navigator.of(context).pushNamed('LoginPage');
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }
 
@@ -115,9 +116,9 @@ showAlert(BuildContext context) {
     builder: (context) {
       return AlertDialog(
         content: SizedBox(
-          height: 100,
-          width: 400,
-          child: BlocBuilder<SignInCubit,SignInStates>(
+          height: 100.h,
+          width: 400.w,
+          child: BlocBuilder<SignInCubit, SignInStates>(
             builder: (context, state) {
               if (state.signInState == SignInState.loading) {
                 return const Center(child: CircularProgressIndicator());
@@ -131,8 +132,9 @@ showAlert(BuildContext context) {
                       size: 60,
                     ),
                     Center(
-                      child: Text(state.error,
-                      style: TextStyle(fontSize: 14.sp),
+                      child: Text(
+                        state.error,
+                        style: TextStyle(fontSize: 14.sp),
                       ),
                     ),
                   ],

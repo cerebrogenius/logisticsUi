@@ -41,7 +41,7 @@ class PostItemScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.w),
               child: Text(
                 'Add Item',
                 style: TextStyle(
@@ -56,48 +56,48 @@ class PostItemScreen extends StatelessWidget {
               controller: nameController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             DetailsForm(
               title: 'Owner Name',
               controller: ownerController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             DetailsForm(
               title: 'Email',
               controller: emailController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             DetailsForm(
               title: 'Phone Number',
               controller: phoneController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             DetailsForm(
               title: 'Note',
               controller: noteController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             DetailsForm(
               title: 'Location',
               controller: locationController,
               titleColor: Colors.blue,
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             Stack(
               children: [
@@ -130,8 +130,8 @@ class PostItemScreen extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 10.h,
             ),
             Stack(
               children: [
@@ -176,14 +176,18 @@ class PostItemScreen extends StatelessWidget {
                   status: detail.currentStatus!,
                   email: emailController.text,
                 );
-
                 post.postItem(item: item, accesstoken: access.access);
-                nameController.clear();
-                noteController.clear();
-                phoneController.clear();
-                locationController.clear();
-                ownerController.clear();
-                emailController.clear();
+                // nameController.clear();
+                // noteController.clear();
+                // phoneController.clear();
+                // locationController.clear();
+                // ownerController.clear();
+                // emailController.clear();
+                Future.delayed(
+                  const Duration(milliseconds: 100),
+                );
+                await showPostDialog(
+                    context.read<PostItemCubit>().state.posted, context);
               },
               child: const Text('Submit'),
             ),
@@ -194,16 +198,17 @@ class PostItemScreen extends StatelessWidget {
   }
 }
 
-showPostDialog(final bool posted, BuildContext context) {
-  return showDialog(
-      context: context,
-      builder: (BuildContext cotext) {
-        return AlertDialog(
-          content: posted == true
-              ? const Text('You posted Successfully')
-              : const Text('Failed'),
-        );
-      });
+showPostDialog(final bool posted, BuildContext context) async {
+  return await showDialog(
+    context: context,
+    builder: (BuildContext cotext) {
+      return AlertDialog(
+        content: posted == true
+            ? const Text('You posted Successfully')
+            : const Text('Failed'),
+      );
+    },
+  );
 }
 
 class DropDownStatus extends StatelessWidget {
@@ -221,17 +226,19 @@ class DropDownStatus extends StatelessWidget {
           onChanged: (value) {
             context.read<PostItemCubit>().changeStatus(currentStatus: value);
           },
-          items: statusList.map((
-            String e,
-          ) {
-            return DropdownMenuItem<String>(
-              value: e,
-              child: Text(
-                e,
-                style: const TextStyle(color: Colors.blue),
-              ),
-            );
-          }).toList(),
+          items: statusList.map(
+            (
+              String e,
+            ) {
+              return DropdownMenuItem<String>(
+                value: e,
+                child: Text(
+                  e,
+                  style: const TextStyle(color: Colors.blue),
+                ),
+              );
+            },
+          ).toList(),
         );
       },
     );

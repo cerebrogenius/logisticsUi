@@ -34,4 +34,3 @@ class UserModel {
     );
   }
 }
-// {name: Cerebro, email: cerebro@gmail.com, _id: 64dc0c7b85b16933f67b5222, created_at: 2023-06-24T17:19:10.572000, is_active: false}

@@ -23,9 +23,6 @@ class SignInStates {
         error: error ?? this.error,
         login: login ?? this.login);
   }
-
-  // @override
-  // List<Object?> get props => [loginState, error];
 }
 
 class SignInCubit extends Cubit<SignInStates> {
@@ -38,24 +35,35 @@ class SignInCubit extends Cubit<SignInStates> {
     required String name,
   }) async {
     try {
-      emit(state.copyWith(status: SignInState.loading, error: ''));
+      emit(
+        state.copyWith(status: SignInState.loading, error: ''),
+      );
 
       final result = await HttpRequest().registerNewUser(
         user: UserModel(name: name, email: email, password: password),
       );
 
       if (result == 'success') {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             status: SignInState.success,
             error: 'Account created, proceed to login page',
-            login: true));
+            login: true,
+          ),
+        );
       } else {
-        emit(state.copyWith(
-            status: SignInState.error, error: result, login: false));
+        emit(
+          state.copyWith(
+              status: SignInState.error, error: result, login: false),
+        );
       }
     } catch (e, s) {
-      emit(state.copyWith(status: SignInState.error, error: e.toString()));
+      emit(
+        state.copyWith(
+          status: SignInState.error,
+          error: e.toString(),
+        ),
+      );
     }
   }
 }
-// we,we@gmail.com,where
