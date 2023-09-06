@@ -8,16 +8,23 @@ import 'package:my_bloc_app/shipment/utilities/constants.dart';
 class DetailsCubitState extends Equatable {
   final String? currentStatus;
   final DateTime? date;
+  final String? location;
 
   const DetailsCubitState({
+    this.location,
     this.date,
     this.currentStatus,
   });
-  DetailsCubitState copyWith(
-      {String? currentStatus, DateTime? date}) {
+  DetailsCubitState copyWith({
+    String? currentStatus,
+    DateTime? date,
+    String? location,
+  }) {
     return DetailsCubitState(
-        currentStatus: currentStatus ?? this.currentStatus,
-        date: date ?? this.date);
+      currentStatus: currentStatus ?? this.currentStatus,
+      date: date ?? this.date,
+      location: location ?? this.location,
+    );
   }
 
   @override
@@ -29,6 +36,7 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
       : super(
           DetailsCubitState(
             currentStatus: statusList[0],
+            location: locationslist[0],
           ),
         );
 
@@ -39,6 +47,10 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
   }
 
   updateDate(DateTime? date) {
-    emit(state.copyWith( date: date));
+    emit(state.copyWith(date: date));
+  }
+
+  updateLocation(String? location) {
+    emit(state.copyWith(location: location));
   }
 }

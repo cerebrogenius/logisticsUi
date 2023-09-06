@@ -18,7 +18,6 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final detail = BlocProvider.of<DetailsCubit>(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -37,14 +36,22 @@ class DetailsScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 Expanded(
-                    child: titleAndSub(
-                        title: 'Name:', subTitle: item.owner ?? '')),
+                  child:
+                      titleAndSub(title: 'Name:', subTitle: item.owner ?? ''),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
                 Expanded(
-                    child: titleAndSub(
-                        title: 'Email:', subTitle: item.email ?? '')),
+                  child: titleAndSub(title: 'Item:', subTitle: item.name ?? ''),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Expanded(
+                  child:
+                      titleAndSub(title: 'Email:', subTitle: item.email ?? ''),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
@@ -56,8 +63,9 @@ class DetailsScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 Expanded(
-                    child: titleAndSub(
-                        title: 'Location:', subTitle: item.location ?? '')),
+                  child: titleAndSub(
+                      title: 'Location:', subTitle: item.location ?? ''),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
@@ -73,14 +81,15 @@ class DetailsScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 Expanded(
-                    child:
-                        titleAndSub(title: 'Note:', subTitle: item.note ?? '')),
+                  child: titleAndSub(title: 'Note:', subTitle: item.note ?? ''),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
                 Expanded(
-                    child: titleAndSub(
-                        title: 'Status:', subTitle: item.status ?? '')),
+                  child: titleAndSub(
+                      title: 'Status:', subTitle: item.status ?? ''),
+                ),
                 SizedBox(
                   height: 10.h,
                 ),
@@ -103,7 +112,23 @@ class DetailsScreen extends StatelessWidget {
                                       children: <Widget>[
                                         const UpdateForm(label: 'Name'),
                                         const UpdateForm(label: 'Note'),
-                                        const UpdateForm(label: 'Location'),
+                                        Stack(
+                                          children: [
+                                            BlocBuilder<DetailsCubit,
+                                                DetailsCubitState>(
+                                              builder: (context, state) {
+                                                return UpdateForm(
+                                                    label: 'Location',
+                                                    hintText: state.location ??
+                                                        'null');
+                                              },
+                                            ),
+                                            const Positioned(
+                                                right: 0,
+                                                bottom: -4,
+                                                child: DropDownStatusLocation())
+                                          ],
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -114,7 +139,7 @@ class DetailsScreen extends StatelessWidget {
                                               builder: (context, state) {
                                                 return SelectOption(
                                                   label: _formattedDate(
-                                                  state.date ??
+                                                    state.date ??
                                                         DateTime.now(),
                                                   ),
                                                   widget: IconButton(
@@ -122,8 +147,9 @@ class DetailsScreen extends StatelessWidget {
                                                       context
                                                           .read<DetailsCubit>()
                                                           .updateDate(
-                                                              await _showDate(
-                                                                  context));
+                                                            await _showDate(
+                                                                context),
+                                                          );
                                                     },
                                                     icon: const Icon(
                                                         Icons.calendar_month),
@@ -138,7 +164,14 @@ class DetailsScreen extends StatelessWidget {
                                               ),
                                             )
                                           ],
-                                        )
+                                        ),
+                                        SizedBox(
+                                          height: 10.h,
+                                        ),
+                                        CustomButton(
+                                            buttonName: 'Submit',
+                                            icon: Icons.done,
+                                            function: () {})
                                       ],
                                     ),
                                   ),
@@ -169,6 +202,38 @@ Future<DateTime?> _showDate(BuildContext context) {
     firstDate: DateTime(2000),
     lastDate: DateTime(3000),
   );
+}
+
+class DropDownStatusLocation extends StatelessWidget {
+  const DropDownStatusLocation({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DetailsCubit, DetailsCubitState>(
+      builder: (context, state) {
+        return DropdownButton<String>(
+          elevation: 10,
+          value: state.location,
+          onChanged: (value) {
+            context.read<DetailsCubit>().updateLocation(value ?? '');
+          },
+          items: locationslist.map(
+            (String e) {
+              return DropdownMenuItem<String>(
+                value: e,
+                child: Text(
+                  e,
+                  style: TextStyle(color: Colors.blue, fontSize: 14.sp),
+                ),
+              );
+            },
+          ).toList(),
+        );
+      },
+    );
+  }
 }
 
 class DropDownStatus extends StatelessWidget {
@@ -234,15 +299,23 @@ class SelectOption extends StatelessWidget {
 
 class UpdateForm extends StatelessWidget {
   final String label;
+  final String? hintText;
+  final TextEditingController? controller;
   const UpdateForm({
     Key? key,
     required this.label,
+    this.controller,
+    this.hintText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      decoration: InputDecoration(labelText: label),
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hintText,
+      ),
     );
   }
 }
