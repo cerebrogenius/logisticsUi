@@ -11,6 +11,7 @@ import 'package:my_bloc_app/shipment/screens/welcome_page/bloc/welcome_page_bloc
 import 'package:my_bloc_app/shipment/screens/welcome_page/welcome_page.dart';
 
 import 'shipment/screens/account_screen/cubit/account_screen_cubit.dart';
+import 'shipment/screens/details/cubit/details_cubit.dart';
 import 'shipment/screens/home_screen/cubit/home_screen_cubit.dart';
 import 'shipment/screens/post_item/cubit/post_item_cubit.dart';
 
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
               ),
                BlocProvider(
                 create: (context) => AccountScreenCubit(),
+              ),
+                BlocProvider(
+                create: (context) => DetailsCubit(),
               ),
             ],
             child: MaterialApp(

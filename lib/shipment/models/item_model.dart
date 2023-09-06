@@ -33,9 +33,9 @@ class Items {
         }
       ],
       'owner': {
-        'name': item.owner,
-        'email': item.email,
-        'phone_no': item.phoneNumber,
+        'name': item.owner??'',
+        'email': item.email??'',
+        'phone_no': item.phoneNumber??'',
       }
     };
   }

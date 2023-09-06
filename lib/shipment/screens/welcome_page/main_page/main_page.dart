@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_bloc_app/shipment/models/item_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
-import 'package:my_bloc_app/shipment/screens/details_screen.dart';
+import 'package:my_bloc_app/shipment/screens/details/details_screen.dart';
 import 'package:my_bloc_app/shipment/screens/post_item/cubit/post_item_cubit.dart';
 import '../../../utilities/widgets/widgets.dart';
 import '../../login_screen/cubit/login_cubit.dart';

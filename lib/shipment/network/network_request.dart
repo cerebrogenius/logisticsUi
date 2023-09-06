@@ -101,8 +101,7 @@ class HttpRequest {
       );
       if (response.statusCode == 200) {
         return 'success';
-      } else {
-      }
+      } else {}
     } catch (e) {}
     return 'error';
   }
@@ -121,7 +120,6 @@ class HttpRequest {
       return e.toString();
     }
   }
-
 
   Stream<List<Items>> getItemStream({required String accessToken}) async* {
     try {
@@ -151,9 +149,28 @@ class HttpRequest {
   }
 
   Future<String> deleteItem(String id, String accessToken) async {
+    Items item = Items();
+    String error = '';
+    Response response = await client.delete(
+      Uri.https(baseUrl, '/items/$id'),
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(
+        item.itemToMap(item: item),
+      ),
+    );
+
+    if (response.statusCode != 200) {
+    } else {}
+    return error;
+  }
+
+  Future<String> updateItem(String id, String accessToken) async {
     String error = '';
     Response response =
-        await client.delete(Uri.https(baseUrl, '/items/$id'), headers: {
+        await client.put(Uri.https(baseUrl, '/items/$id'), headers: {
       'Content-type': 'application/json',
       'Authorization': 'Bearer $accessToken',
     });
