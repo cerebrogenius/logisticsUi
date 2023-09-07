@@ -142,7 +142,7 @@ class AccountScreen extends StatelessWidget {
                                     height: 40.h,
                                     child: const Center(
                                       child: Text(
-                                        'Activate your account',
+                                        'Activate your Account',
                                         style: TextStyle(color: Colors.blue),
                                       ),
                                     ),

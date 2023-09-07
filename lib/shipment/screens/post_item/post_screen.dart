@@ -30,14 +30,7 @@ class PostItemScreen extends StatelessWidget {
     final post = BlocProvider.of<PostItemCubit>(context);
     return SingleChildScrollView(
       child: BlocListener<PostItemCubit, PostItemCubitState>(
-        listener: (context, state) {
-          if (state.posted == true && nameController.text.isEmpty) {
-            state.copyWith(
-              date: DateTime.now(),
-            );
-            showPostDialog(state.posted, context);
-          }
-        },
+        listener: (context, state) {},
         child: Column(
           children: [
             Padding(
@@ -176,18 +169,18 @@ class PostItemScreen extends StatelessWidget {
                   status: detail.currentStatus!,
                   email: emailController.text,
                 );
-                post.postItem(item: item, accesstoken: access.access);
+                    post.postItem(item: item, accesstoken: access.access);
+                
+                
                 // nameController.clear();
                 // noteController.clear();
                 // phoneController.clear();
                 // locationController.clear();
                 // ownerController.clear();
                 // emailController.clear();
-                Future.delayed(
-                  const Duration(milliseconds: 100),
-                );
-                await showPostDialog(
-                    context.read<PostItemCubit>().state.posted, context);
+              
+
+                await showPostDialog(context);
               },
               child: const Text('Submit'),
             ),
@@ -198,14 +191,24 @@ class PostItemScreen extends StatelessWidget {
   }
 }
 
-showPostDialog(final bool posted, BuildContext context) async {
+showPostDialog(BuildContext context) async {
   return await showDialog(
     context: context,
     builder: (BuildContext cotext) {
-      return AlertDialog(
-        content: posted == true
-            ? const Text('You posted Successfully')
-            : const Text('Failed'),
+      return BlocBuilder<PostItemCubit, PostItemCubitState>(
+        builder: (context, state) {
+          if (state.postStatus == ItemStatus.loading) {
+            return const Center(
+              child:  CircularProgressIndicator(),);
+          } else if (state.postStatus == ItemStatus.success) {
+            return const AlertDialog(
+              content: Text('Posted Successfully'),
+            );
+          } else if (state.postStatus == ItemStatus.error) {
+            return const Text('error posting item');
+          }
+          return const SizedBox.shrink();
+        },
       );
     },
   );

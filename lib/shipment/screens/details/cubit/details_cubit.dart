@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:my_bloc_app/shipment/utilities/constants.dart';
 
+import '../../../models/item_model.dart';
+import '../../../network/network_request.dart';
+
 // part 'details_state.dart';
 
 class DetailsCubitState extends Equatable {
@@ -28,7 +31,11 @@ class DetailsCubitState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [currentStatus, date];
+  List<Object?> get props => [
+        currentStatus,
+        date,
+        location,
+      ];
 }
 
 class DetailsCubit extends Cubit<DetailsCubitState> {
@@ -42,7 +49,9 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
 
   updateStatus(String status) {
     emit(
-      state.copyWith(currentStatus: status, date: DateTime.now()),
+      state.copyWith(
+        currentStatus: status,
+      ),
     );
   }
 
@@ -52,5 +61,20 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
 
   updateLocation(String? location) {
     emit(state.copyWith(location: location));
+  }
+
+  Future<String?> editItem(
+      {required String id,
+      required String accessToken,
+      required Items item}) async {
+    final response = await HttpRequest().updateItem(
+      id,
+      accessToken,
+      item,
+    );
+    if (response == 'success') {
+      print('success');
+    }
+    return response;
   }
 }

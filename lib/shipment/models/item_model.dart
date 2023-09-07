@@ -33,24 +33,35 @@ class Items {
         }
       ],
       'owner': {
-        'name': item.owner??'',
-        'email': item.email??'',
-        'phone_no': item.phoneNumber??'',
+        'name': item.owner ?? '',
+        'email': item.email ?? '',
+        'phone_no': item.phoneNumber ?? '',
       }
     };
   }
 
   Items itemFromNetwork(Map<String, dynamic> map) {
     return Items(
-      name: map['name'],
-      date: DateTime.tryParse(map['timeline'][0]['date']),
-      status: map['timeline'][0]['status'],
-      location: map['timeline'][0]['location'],
-      note: map['timeline'][0]['note'],
-      owner: map['owner']['name'],
-      email: map['owner']['email'],
-      phoneNumber: map['owner']['phone_no'].toString(),
-      id: map['_id']
-    );
+        name: map['name'],
+        date: DateTime.tryParse(map['timeline'][0]['date']),
+        status: map['timeline'][0]['status'],
+        location: map['timeline'][0]['location'],
+        note: map['timeline'][0]['note'],
+        owner: map['owner']['name'],
+        email: map['owner']['email'],
+        phoneNumber: map['owner']['phone_no'].toString(),
+        id: map['_id']);
+  }
+
+  Map<String, dynamic> updateToMap(Items item) {
+    return {
+      'name': item.name,
+      'status': {
+        'date': item.date.toString(),
+        'status': item.status,
+        'note': item.status,
+        'location': item.location
+      }
+    };
   }
 }

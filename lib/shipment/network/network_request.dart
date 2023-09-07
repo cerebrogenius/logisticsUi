@@ -167,16 +167,26 @@ class HttpRequest {
     return error;
   }
 
-  Future<String> updateItem(String id, String accessToken) async {
+  Future<String?> updateItem(String id, String accessToken, Items item) async {
     String error = '';
-    Response response =
-        await client.put(Uri.https(baseUrl, '/items/$id'), headers: {
-      'Content-type': 'application/json',
-      'Authorization': 'Bearer $accessToken',
-    });
+    try {
+      Response response = await client.put(Uri.https(baseUrl, '/items/$id'),
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(item.updateToMap( item)));
 
-    if (response.statusCode != 200) {
-    } else {}
-    return error;
+      if (response.statusCode != 200) {
+        final responses = jsonDecode(response.body);
+        print(response.statusCode);
+        error = 'success';
+      } else {
+        print(response.body);
+      }
+      return error;
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

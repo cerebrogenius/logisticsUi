@@ -157,8 +157,10 @@ class _OrdersListState extends State<OrdersList> {
             color: Colors.blue,
             height: 50.h,
             width: 50.w,
-            child: const CircularProgressIndicator(
-              color: Colors.white,
+            child: const Center(
+              child:  CircularProgressIndicator(
+                color: Colors.white,
+              ),
             ),
           );
         } else if (items.connectionState == ConnectionState.done) {
