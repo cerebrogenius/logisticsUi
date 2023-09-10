@@ -40,17 +40,18 @@ class Items {
     };
   }
 
-  Items itemFromNetwork(Map<String, dynamic> map) {
+  factory Items.itemFromNetwork(Map<String, dynamic> map) {
     return Items(
-        name: map['name'],
-        date: DateTime.tryParse(map['timeline'][0]['date']),
-        status: map['timeline'][0]['status'],
-        location: map['timeline'][0]['location'],
-        note: map['timeline'][0]['note'],
-        owner: map['owner']['name'],
-        email: map['owner']['email'],
-        phoneNumber: map['owner']['phone_no'].toString(),
-        id: map['_id']);
+      name: map['name'],
+      date: DateTime.tryParse(map['timeline'][0]['date']),
+      status: map['timeline'][0]['status'],
+      location: map['timeline'][0]['location'],
+      note: map['timeline'][0]['note'],
+      owner: map['owner']['name'],
+      email: map['owner']['email'],
+      phoneNumber: map['owner']['phone_no'].toString(),
+      id: map['_id'],
+    );
   }
 
   Map<String, dynamic> updateToMap(Items item) {
@@ -59,9 +60,12 @@ class Items {
       'status': {
         'date': item.date.toString(),
         'status': item.status,
-        'note': item.status,
+        'note': item.note,
         'location': item.location
       }
     };
   }
+
 }
+
+

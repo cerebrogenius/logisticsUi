@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:my_bloc_app/shipment/models/time_line.dart';
 import 'package:my_bloc_app/shipment/screens/details/cubit/details_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/signUp_screen_widgets.dart';
 import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
@@ -11,7 +12,7 @@ import '../../models/item_model.dart';
 import '../../utilities/constants.dart';
 import '../login_screen/cubit/login_cubit.dart';
 
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   final Items item;
   const DetailsScreen({
     Key? key,
@@ -21,6 +22,11 @@ class DetailsScreen extends StatelessWidget {
   static TextEditingController noteController = TextEditingController();
   static TextEditingController locationController = TextEditingController();
 
+  @override
+  State<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final detail = BlocProvider.of<DetailsCubit>(context);
@@ -32,212 +38,333 @@ class DetailsScreen extends StatelessWidget {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(left: 10.w),
-            height: 500.h,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child:
-                      titleAndSub(title: 'Name:', subTitle: item.owner ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(title: 'Item:', subTitle: item.name ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child:
-                      titleAndSub(title: 'Email:', subTitle: item.email ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(
-                      title: 'Phone Number:', subTitle: item.phoneNumber ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(
-                      title: 'Location:', subTitle: item.location ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(
-                    title: 'Time:',
-                    subTitle: formattedDate(
-                      item.date ?? DateTime.now(),
-                    ),
+          child: BlocBuilder<DetailsCubit, DetailsCubitState>(
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DetailsWidget(
+                    item: widget.item,
                   ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(title: 'Note:', subTitle: item.note ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Expanded(
-                  child: titleAndSub(
-                      title: 'Status:', subTitle: item.status ?? ''),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
-                      child: CustomButton(
-                        buttonName: 'Update',
-                        icon: Icons.update,
-                        function: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Fill out the Form'),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      children: <Widget>[
-                                        UpdateForm(
-                                          label: 'Item',
-                                          controller: nameController,
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        UpdateForm(
-                                          label: 'Note',
-                                          controller: noteController,
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        Stack(
-                                          children: [
-                                            BlocBuilder<DetailsCubit,
-                                                DetailsCubitState>(
-                                              builder: (context, state) {
-                                                return UpdateForm(
-                                                  click: false,
-                                                  controller:
-                                                      locationController,
-                                                  label: 'Location',
-                                                  hint:
-                                                      state.location ?? 'null',
-                                                );
-                                              },
-                                            ),
-                                            const Positioned(
-                                              right: 0,
-                                              bottom: -8,
-                                              child: DropDownStatusLocation(),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            BlocBuilder<DetailsCubit,
-                                                DetailsCubitState>(
-                                              builder: (context, state) {
-                                                return SelectOption(
-                                                  label: _formattedDate(
-                                                    state.date ??
-                                                        DateTime.now(),
-                                                  ),
-                                                  widget: IconButton(
-                                                    onPressed: () async {
-                                                      context
-                                                          .read<DetailsCubit>()
-                                                          .updateDate(
-                                                            await _showDate(
-                                                                context),
-                                                          );
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.calendar_month),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            const Expanded(
-                                              child: SelectOption(
-                                                label: 'Status: ',
-                                                widget: DropDownStatus(),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        CustomButton(
-                                            buttonName: 'Submit',
-                                            icon: Icons.done,
-                                            function: () {
-                                              if (nameController.text.isEmpty ||
-                                                  noteController.text.isEmpty) {
-                                                MessageSnackBar().showMessage(
-                                                    context: context,
-                                                    message:
-                                                        'Fields can\'t be empty',
-                                                    isError: true,
-                                                    icon: Icons.error);
-                                                return;
-                                              } else {
-                                               final itemed = Items(
-                                                name: nameController.text,
-                                                note: noteController.text,
-                                                location: detail.state.location,
-                                                date: detail.state.date,
-                                                status: detail.state.currentStatus,
-                                               );
-                                                detail.editItem(
-                                                  id: item.id??'',
-                                                  accessToken: access.state.access,
-                                                  item: itemed,
-                                                );
-                                              }
-                                            })
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-                        },
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: CustomButton(
+                          color: Colors.blue,
+                          buttonName: 'Update',
+                          icon: Icons.update,
+                          function: () async {
+                            await showForm(context, detail, access);
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+                    ],
+                  ),
+                  BlocBuilder<DetailsCubit, DetailsCubitState>(
+                    builder: (context, state) {
+                      if (state.updated == Update.loading)
+                        return Center(child: CircularProgressIndicator(),);
+                      else if (state.updated == Update.success) {
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.timelineList!.length,
+                          itemBuilder: ((context, index) {
+                            return TimeLineWidget(
+                              timeLine: state.timelineList![index],
+                            );
+                          }),
+                        );
+                      } else if (state.updated == Update.error) {
+                        return Text(state.timelineList.toString());
+                      }
+                      return SizedBox.shrink();
+                    },
+                  )
+                ],
+              );
+            },
           ),
         ),
       ),
+    );
+  }
+
+  showForm(
+    BuildContext context,
+    DetailsCubit detail,
+    LoginCubit access,
+  ) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Fill out the Form'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  UpdateForm(
+                    label: 'Item',
+                    controller: DetailsScreen.nameController,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  UpdateForm(
+                    label: 'Note',
+                    controller: DetailsScreen.noteController,
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Stack(
+                    children: [
+                      BlocBuilder<DetailsCubit, DetailsCubitState>(
+                        builder: (context, state) {
+                          return UpdateForm(
+                            click: false,
+                            controller: DetailsScreen.locationController,
+                            label: 'Location',
+                            hint: state.location ?? 'null',
+                          );
+                        },
+                      ),
+                      const Positioned(
+                        right: 0,
+                        bottom: -8,
+                        child: DropDownStatusLocation(),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BlocBuilder<DetailsCubit, DetailsCubitState>(
+                        builder: (context, state) {
+                          return SelectOption(
+                            label: _formattedDate(
+                              state.date ?? DateTime.now(),
+                            ),
+                            widget: IconButton(
+                              onPressed: () async {
+                                context.read<DetailsCubit>().updateDate(
+                                      await _showDate(context),
+                                    );
+                              },
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                          );
+                        },
+                      ),
+                      const Expanded(
+                        child: SelectOption(
+                          label: 'Status: ',
+                          widget: DropDownStatus(),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  CustomButton(
+                      buttonName: 'Submit',
+                      icon: Icons.done,
+                      function: () {
+                        if (DetailsScreen.nameController.text.isEmpty ||
+                            DetailsScreen.noteController.text.isEmpty) {
+                          MessageSnackBar().showMessage(
+                              context: context,
+                              message: 'Fields can\'t be empty',
+                              isError: true,
+                              icon: Icons.error);
+                          return;
+                        } else {
+                          final itemed = Items(
+                            name: DetailsScreen.nameController.text,
+                            note: DetailsScreen.noteController.text,
+                            location: detail.state.location,
+                            date: detail.state.date,
+                            status: detail.state.currentStatus,
+                          );
+                          detail.editItem(
+                            id: widget.item.id ?? '',
+                            accessToken: access.state.access,
+                            item: itemed,
+                          );
+                          Navigator.pop(
+                            context,
+                          );
+                        }
+                      })
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}
+
+class DetailsWidget extends StatelessWidget {
+  final Items item;
+  final Color? color;
+  const DetailsWidget({
+    required this.item,
+    this.color,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 8.h,
+        left: 8.h,
+        right: 8.h,
+      ),
+      padding: EdgeInsets.only(
+        top: 8.h,
+        bottom: 8.h,
+      ),
+      decoration: BoxDecoration(
+        color: color ?? Colors.green,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      child: Column(
+        children: [
+          DetailTile(
+            info: item.owner ?? '',
+            label: 'Name',
+          ),
+          DetailTile(
+            info: item.name ?? '',
+            label: 'Item',
+          ),
+          DetailTile(
+            info: item.email ?? '',
+            label: 'Email',
+          ),
+          DetailTile(
+            info: item.phoneNumber ?? '',
+            label: 'Phone Number',
+          ),
+          DetailTile(
+            info: item.location ?? '',
+            label: 'Location',
+          ),
+          DetailTile(
+            info: formattedDate(
+              item.date ?? DateTime.now(),
+            ),
+            label: 'Time',
+          ),
+          DetailTile(
+            info: item.note ?? '',
+            label: 'Note',
+          ),
+          DetailTile(
+            info: item.status ?? '',
+            label: 'Status',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TimeLineWidget extends StatelessWidget {
+  final TimeLine timeLine;
+
+  const TimeLineWidget({super.key, required this.timeLine});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 8.h,
+        left: 8.h,
+        right: 8.h,
+      ),
+      padding: EdgeInsets.only(
+        top: 8.h,
+        bottom: 8.h,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      child: Column(
+        children: [
+          // DetailTile(
+          //   info: timeLine.name,
+          //   label: 'Item',
+          // ),
+          DetailTile(
+            info: timeLine.location,
+            label: 'Location',
+          ),
+          DetailTile(
+            info: formattedDate(
+              timeLine.date,
+            ),
+            label: 'Time',
+          ),
+          DetailTile(
+            info: timeLine.note,
+            label: 'Note',
+          ),
+          DetailTile(
+            info: timeLine.status,
+            label: 'Status',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DetailTile extends StatelessWidget {
+  final String label;
+  final String info;
+  const DetailTile({
+    Key? key,
+    required this.info,
+    required this.label,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        right: 10.h,
+        left: 10.h,
+      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          '$label:',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14.sp,
+          ),
+        ),
+        Text(
+          info,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ]),
     );
   }
 }

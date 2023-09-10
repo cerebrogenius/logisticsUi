@@ -4,13 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utilities/constants.dart';
 
 class CustomButton extends StatelessWidget {
+  final Color? color;
   final bool isLoading;
   final Function() function;
   final String buttonName;
   final IconData icon;
- const CustomButton(
+  const CustomButton(
       {Key? key,
       this.isLoading = false,
+      this.color = indicatorBlue,
       required this.buttonName,
       required this.icon,
       required this.function})
@@ -23,7 +25,7 @@ class CustomButton extends StatelessWidget {
       height: 40.h,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(9.r)),
-          color: indicatorBlue),
+          color: color??indicatorBlue),
       child: isLoading
           ? const CircularProgressIndicator()
           : Row(

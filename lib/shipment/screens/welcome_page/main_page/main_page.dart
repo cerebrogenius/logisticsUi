@@ -146,10 +146,12 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
+  
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Items>>(
-      stream: HttpRequest()
+    return FutureBuilder<List<Items>>(
+      initialData: [Items()],
+      future: HttpRequest()
           .getItemStream(accessToken: context.read<LoginCubit>().state.access),
       builder: (BuildContext context, items) {
         if (items.connectionState == ConnectionState.waiting) {
@@ -158,13 +160,15 @@ class _OrdersListState extends State<OrdersList> {
             height: 50.h,
             width: 50.w,
             child: const Center(
-              child:  CircularProgressIndicator(
+              child: CircularProgressIndicator(
                 color: Colors.white,
               ),
             ),
           );
         } else if (items.connectionState == ConnectionState.done) {
+          print('here2');
           if (items.hasError) {
+            print('here3');
             return Container(
               width: 450.w,
               height: 150.h,
@@ -176,6 +180,8 @@ class _OrdersListState extends State<OrdersList> {
               ),
             );
           } else if (items.hasData) {
+            print('here');
+
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -184,13 +190,15 @@ class _OrdersListState extends State<OrdersList> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onLongPress: () async {
-                    final deleted =
-                        await showOptions(context, items.data![index]);
+                    final deleted = await showOptions(
+                      context,
+                      items.data![index],
+                    );
                     if (deleted == false) {
                       return;
-                    } else {
+                    } 
                       setState(() {});
-                    }
+                    
                   },
                   child: detailsWidget(
                     item: items.data![index],
@@ -201,13 +209,17 @@ class _OrdersListState extends State<OrdersList> {
             );
           }
         }
-        return Container(
-          width: 450.w,
-          height: 150.h,
-          color: Colors.white,
-          child: const Text(
-            'You Have No Posts Yet',
-            style: TextStyle(color: Colors.black),
+        return Center(
+          child: Container(
+            width: 450.w,
+            height: 150.h,
+            color: Colors.white,
+            child: const Center(
+              child: Text(
+                'You Have No Posts Yet',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
           ),
         );
       },
@@ -238,13 +250,15 @@ Future<bool> showOptions(
             ),
             actions: [
               InkWell(
-                onTap: () {
-                  HttpRequest().deleteItem(
+                onTap: ()async {
+                deleted = await HttpRequest().deleteItem(
                     item.id ?? '',
                     context.read<LoginCubit>().state.access,
                   );
-                  deleted = true;
-                  return Navigator.pop(context);
+                
+  
+
+                   Navigator.pop(context);
                 },
                 child: Text(
                   'delete',
