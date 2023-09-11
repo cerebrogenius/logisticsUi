@@ -166,9 +166,7 @@ class _OrdersListState extends State<OrdersList> {
             ),
           );
         } else if (items.connectionState == ConnectionState.done) {
-          print('here2');
           if (items.hasError) {
-            print('here3');
             return Container(
               width: 450.w,
               height: 150.h,
@@ -180,8 +178,6 @@ class _OrdersListState extends State<OrdersList> {
               ),
             );
           } else if (items.hasData) {
-            print('here');
-
             return ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -238,7 +234,7 @@ Future<bool> showOptions(
       return BlocBuilder<PostItemCubit, PostItemCubitState>(
         builder: (context, state) {
           return AlertDialog(
-            content: Container(
+            content: SizedBox(
               height: 20.h,
               child: Center(
                 child: Text(
@@ -255,9 +251,6 @@ Future<bool> showOptions(
                     item.id ?? '',
                     context.read<LoginCubit>().state.access,
                   );
-                
-  
-
                    Navigator.pop(context);
                 },
                 child: Text(
@@ -296,3 +289,4 @@ Future<bool> showOptions(
   );
   return deleted;
 }
+
