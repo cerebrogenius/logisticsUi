@@ -340,10 +340,6 @@ class TimeLineWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // DetailTile(
-          //   info: timeLine.name,
-          //   label: 'Item',
-          // ),
           DetailTile(
             info: timeLine.location,
             label: 'Location',
@@ -529,7 +525,7 @@ class UpdateForm extends StatelessWidget {
         SizedBox(
           height: 10.h,
         ),
-        Container(
+        SizedBox(
           height: 25.h,
           child: TextField(
             enabled: click ?? true,

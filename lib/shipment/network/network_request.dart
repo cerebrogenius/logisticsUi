@@ -71,7 +71,7 @@ class HttpRequest {
   }
 
   Future<UserModel> getUserDetailsFromNetwork(String accesstoken) async {
-    UserModel userDetail = UserModel();
+    UserModel userDetail = const UserModel();
     Response response = await client.get(
       headers: {
         'Content-type': 'application/json',
@@ -80,7 +80,7 @@ class HttpRequest {
       Uri.https(baseUrl, '/users/me'),
     );
     if (response.statusCode == 200) {
-      UserModel user = UserModel();
+      UserModel user = const UserModel();
       userDetail = user.getUser(
         jsonDecode(response.body),
       );
@@ -102,11 +102,8 @@ class HttpRequest {
         ),
       );
       if (response.statusCode == 200) {
-        print(response.body);
         return 'success';
       } else {
-        print(response.statusCode);
-        print(response.body);
       }
     } catch (e) {
       log(

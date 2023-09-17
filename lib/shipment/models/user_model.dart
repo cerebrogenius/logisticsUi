@@ -5,7 +5,7 @@ class UserModel {
   final DateTime? created_at;
   final bool? isActive;
 
-  UserModel({
+ const UserModel({
     this.name,
     this.email,
     this.isActive,

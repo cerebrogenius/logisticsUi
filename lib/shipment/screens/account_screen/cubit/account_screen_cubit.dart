@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../../network/network_request.dart';
 
@@ -19,7 +18,7 @@ class AccountScreenState {
   AccountScreenState copyWith({String? response, ConfirmState? state}) {
     return AccountScreenState(
       response: response ?? this.response,
-      accountstate: state ?? this.accountstate,
+      accountstate: state ?? accountstate,
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:my_bloc_app/shipment/models/user_model.dart';
 import 'package:my_bloc_app/shipment/network/network_request.dart';
 
@@ -57,7 +56,7 @@ class SignInCubit extends Cubit<SignInStates> {
               status: SignInState.error, error: result, login: false),
         );
       }
-    } catch (e, s) {
+    } catch (e) {
       emit(
         state.copyWith(
           status: SignInState.error,

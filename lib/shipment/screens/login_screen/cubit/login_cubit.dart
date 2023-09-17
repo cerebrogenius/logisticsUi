@@ -89,12 +89,14 @@ class LoginCubit extends Cubit<LoginCubitState> {
   }
 
   Future<UserModel> getUserDetails(String access) async {
-    UserModel user = UserModel();
+    UserModel user = const UserModel();
     try {
       user = await HttpRequest().getUserDetailsFromNetwork(access);
 
       emit(state.copyWith(user: user));
-    } catch (e) {}
+    } catch (e) {
+      
+    }
     return user;
   }
 
@@ -106,7 +108,6 @@ class LoginCubit extends Cubit<LoginCubitState> {
       }
       return response;
     } catch (e) {
-      print(e);
       return 'error';
     }
   }

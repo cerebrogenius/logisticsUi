@@ -181,12 +181,11 @@ class PostItemScreen extends StatelessWidget {
               );
               post.postItem(item: item, accesstoken: access.access);
 
-              // nameController.clear();
-              // noteController.clear();
-              // phoneController.clear();
-              // locationController.clear();
-              // ownerController.clear();
-              // emailController.clear();
+              nameController.clear();
+              noteController.clear();
+              phoneController.clear();
+              ownerController.clear();
+              emailController.clear();
 
               await showPostDialog(context);
             },
