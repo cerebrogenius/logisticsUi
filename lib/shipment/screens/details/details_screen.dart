@@ -7,8 +7,8 @@ import 'package:my_bloc_app/shipment/screens/details/cubit/details_cubit.dart';
 import 'package:my_bloc_app/shipment/screens/signUp_screen_widgets.dart';
 import 'package:my_bloc_app/shipment/utilities/snack_bar.dart';
 import 'package:my_bloc_app/shipment/utilities/widgets/widgets.dart';
-
 import '../../models/item_model.dart';
+import '../../network/network_request.dart';
 import '../../utilities/constants.dart';
 import '../login_screen/cubit/login_cubit.dart';
 
@@ -27,6 +27,11 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final detail = BlocProvider.of<DetailsCubit>(context);
@@ -61,6 +66,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           icon: Icons.update,
                           function: () async {
                             await showForm(context, detail, access);
+                            // setState(() {});
                           },
                         ),
                       ),
@@ -68,23 +74,45 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ),
                   BlocBuilder<DetailsCubit, DetailsCubitState>(
                     builder: (context, state) {
-                      if (state.updated == Update.loading)
-                        return Center(child: CircularProgressIndicator(),);
-                      else if (state.updated == Update.success) {
-                        return ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: state.timelineList!.length,
-                          itemBuilder: ((context, index) {
-                            return TimeLineWidget(
-                              timeLine: state.timelineList![index],
+                      return FutureBuilder<List<ItemTimeLine>>(
+                        future: HttpRequest()
+                            .getItemStream(
+                                accessToken:
+                                    context.read<LoginCubit>().state.access)
+                            .then((value) {
+                          List<ItemTimeLine>? list = [];
+                          Items itemed = Items();
+                          for (Items item in value) {
+                            list = itemed.getTimeline(item) ?? [];
+                          }
+                          return list ?? [];
+                        }),
+                        builder: ((context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
                             );
-                          }),
-                        );
-                      } else if (state.updated == Update.error) {
-                        return Text(state.timelineList.toString());
-                      }
-                      return SizedBox.shrink();
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text(snapshot.data.toString()),
+                              );
+                            } else if (snapshot.hasData) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: ((context, index) {
+                                    return TimeLineWidget(
+                                        timeLine: snapshot.data![index]);
+                                  }));
+                            }
+                          }
+                          return const SizedBox.shrink();
+                        }),
+                      );
                     },
                   )
                 ],
@@ -177,36 +205,40 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   SizedBox(
                     height: 10.h,
                   ),
-                  CustomButton(
-                      buttonName: 'Submit',
-                      icon: Icons.done,
-                      function: () {
-                        if (DetailsScreen.nameController.text.isEmpty ||
-                            DetailsScreen.noteController.text.isEmpty) {
-                          MessageSnackBar().showMessage(
-                              context: context,
-                              message: 'Fields can\'t be empty',
-                              isError: true,
-                              icon: Icons.error);
-                          return;
-                        } else {
-                          final itemed = Items(
-                            name: DetailsScreen.nameController.text,
-                            note: DetailsScreen.noteController.text,
-                            location: detail.state.location,
-                            date: detail.state.date,
-                            status: detail.state.currentStatus,
-                          );
-                          detail.editItem(
-                            id: widget.item.id ?? '',
-                            accessToken: access.state.access,
-                            item: itemed,
-                          );
-                          Navigator.pop(
-                            context,
-                          );
-                        }
-                      })
+                  BlocBuilder<DetailsCubit, DetailsCubitState>(
+                    builder: (context, state) {
+                      return CustomButton(
+                          buttonName: 'Submit',
+                          icon: Icons.done,
+                          function: () {
+                            if (DetailsScreen.nameController.text.isEmpty ||
+                                DetailsScreen.noteController.text.isEmpty) {
+                              MessageSnackBar().showMessage(
+                                  context: context,
+                                  message: 'Fields can\'t be empty',
+                                  isError: true,
+                                  icon: Icons.error);
+                              return;
+                            } else {
+                              final itemed = Items(
+                                name: DetailsScreen.nameController.text,
+                                note: DetailsScreen.noteController.text,
+                                location: detail.state.location,
+                                date: detail.state.date,
+                                status: detail.state.currentStatus,
+                              );
+                              detail.editItem(
+                                id: widget.item.id ?? '',
+                                accessToken: access.state.access,
+                                item: itemed,
+                              );
+                              Navigator.pop(
+                                context,
+                              );
+                            }
+                          });
+                    },
+                  )
                 ],
               ),
             ),
@@ -285,7 +317,7 @@ class DetailsWidget extends StatelessWidget {
 }
 
 class TimeLineWidget extends StatelessWidget {
-  final TimeLine timeLine;
+  final ItemTimeLine timeLine;
 
   const TimeLineWidget({super.key, required this.timeLine});
   @override

@@ -1,16 +1,16 @@
-class TimeLine {
+class ItemTimeLine {
   final DateTime date;
   final String status;
   final String note;
   final String location;
-  const TimeLine({
+  const ItemTimeLine({
     required this.date,
     required this.status,
     required this.note,
     required this.location,
   });
-  factory TimeLine.getTimelineFromMap(Map<String, dynamic> json) {
-    return TimeLine(
+  factory ItemTimeLine.getTimelineFromMap(Map<String, dynamic> json) {
+    return ItemTimeLine(
       date: DateTime.parse(json['date']),
       status: json['status'],
       note: json['note'],

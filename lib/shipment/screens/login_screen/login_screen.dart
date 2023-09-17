@@ -12,9 +12,9 @@ import '../signUp_screen_widgets.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
   static TextEditingController emailController =
-      TextEditingController(text: 'yakubayoola96@gmail.com');
+      TextEditingController(text: 'yahkubabdulmajeed1@gmail.com');
   static TextEditingController passwordController =
-      TextEditingController(text: 'yakub');
+      TextEditingController(text: 'abdulmajeed');
 
   @override
   Widget build(BuildContext context) {

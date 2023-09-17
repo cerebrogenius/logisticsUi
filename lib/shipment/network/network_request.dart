@@ -102,10 +102,16 @@ class HttpRequest {
         ),
       );
       if (response.statusCode == 200) {
+        print(response.body);
         return 'success';
-      } else {}
+      } else {
+        print(response.statusCode);
+        print(response.body);
+      }
     } catch (e) {
-      log(e.toString(),);
+      log(
+        e.toString(),
+      );
     }
     return 'error';
   }
@@ -134,11 +140,7 @@ class HttpRequest {
       });
       if (response.statusCode == 200) {
         List<dynamic> itemList = jsonDecode(response.body);
-        return itemList
-            .map(
-              (e) => Items.itemFromNetwork(e),
-            )
-            .toList();
+        return itemList.map((e) => Items.itemFromNetwork(e)).toList();
       } else {
         throw Exception('Expired Time');
       }
@@ -182,6 +184,7 @@ class HttpRequest {
       if (response.statusCode == 200) {
         error = 'success';
         final Map<String, dynamic> responses = jsonDecode(response.body);
+        log(response.body);
         timeline = responses['timeline'];
       } else {
         error = 'failure';

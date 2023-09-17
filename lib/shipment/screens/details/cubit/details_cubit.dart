@@ -11,9 +11,9 @@ import '../../../network/network_request.dart';
 enum Update { loading, error, success, initial }
 
 class DetailsCubitState extends Equatable {
-  final List<TimeLine>? timelineList;
+  final List<ItemTimeLine>? timelineList;
   final Update? updated;
-  final TimeLine? timeLine;
+  final ItemTimeLine? timeLine;
   final String? currentStatus;
   final DateTime? date;
   final String? location;
@@ -27,12 +27,12 @@ class DetailsCubitState extends Equatable {
     this.currentStatus,
   });
   DetailsCubitState copyWith({
-    List<TimeLine>? timelineList,
+    List<ItemTimeLine>? timelineList,
     Update? updated,
     String? currentStatus,
     DateTime? date,
     String? location,
-    TimeLine? timeLine,
+    ItemTimeLine? timeLine,
   }) {
     return DetailsCubitState(
       timelineList: timelineList ?? this.timelineList,
@@ -60,7 +60,7 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
           DetailsCubitState(
             currentStatus: statusList[0],
             location: locationslist[0],
-            timelineList: const[],
+            timelineList: const [],
           ),
         );
 
@@ -80,7 +80,7 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
     emit(state.copyWith(location: location));
   }
 
-  Future<List<TimeLine>> editItem(
+  editItem(
       {required String id,
       required String accessToken,
       required Items item}) async {
@@ -93,29 +93,44 @@ class DetailsCubit extends Cubit<DetailsCubitState> {
       item,
     );
     if (response[0] == 'success') {
-      List timelines = response[1];
-      List<TimeLine> timeLineFinal = [];
-
-      for (Map<String, dynamic> data in timelines) {
-        timeLineFinal.add(
-          TimeLine.getTimelineFromMap(data),
-        );
-      }
       emit(
-        state.copyWith(timelineList: timeLineFinal,
-        updated: Update.success,
-        ),
+        state.copyWith(updated: Update.success, ),
       );
-      return timelines
-          .map(
-            (e) => TimeLine.getTimelineFromMap(e),
-          )
-          .toList();
     } else {
       emit(
         state.copyWith(updated: Update.error),
       );
     }
+
     return [];
+  }
+
+  Future<List<ItemTimeLine>> getItemTimelines(
+      {required String id,
+      required String accessToken,
+      required Items item}) async {
+    emit(
+      state.copyWith(updated: Update.loading),
+    );
+    List<ItemTimeLine> timelines = [];
+    final response =
+        await HttpRequest().getItemStream(accessToken: accessToken);
+    if (response.isNotEmpty) {
+      for (item in response) {
+        final timeline = response.map((e) => e.timeline) as ItemTimeLine;
+        timelines.add(timeline);
+      }
+      emit(
+        state.copyWith(
+          timelineList: timelines,
+          updated: Update.success,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(updated: Update.error),
+      );
+    }
+    return timelines;
   }
 }
